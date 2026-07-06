@@ -2,7 +2,7 @@ import { LinkButton } from "@/components/ui/Button";
 import { EditionCard } from "@/components/sections/EditionCard";
 import { editions } from "@/content/editions";
 
-export function AllEditionsStrip() {
+export function AllEditionsStrip({ mediaMap = {} }: { mediaMap?: Record<string, string> }) {
   return (
     <section className="px-5 py-20 sm:px-8">
       <div className="mx-auto max-w-6xl">
@@ -20,7 +20,12 @@ export function AllEditionsStrip() {
 
         <div className="mt-12 grid gap-5 sm:grid-cols-3 lg:grid-cols-6">
           {editions.map((edition) => (
-            <EditionCard key={edition.slug} edition={edition} compact />
+            <EditionCard
+              key={edition.slug}
+              edition={edition}
+              compact
+              mediaUrl={mediaMap[`edition-${edition.slug}`] ?? null}
+            />
           ))}
         </div>
 

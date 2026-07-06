@@ -10,21 +10,29 @@ A curated, seasonal physical-mail club. "We do the finding. You do the keeping."
 - Three real admin accounts (Claire = owner, Catherine + Leah = admin) with
   role-based access enforced by RLS + a defense-in-depth trigger (verified: a
   regular signed-up user cannot self-promote their own role)
-- **Click-to-edit CMS**: signed-in admins see a floating "Edit this site" bar.
-  Switching it on makes marked text fields directly editable in place (saves
-  on blur) and founder photos get a "Change photo" upload overlay (uploads to
-  Supabase Storage). Currently wired on the Home hero/promise text and the
-  Keepers page (photos + bios) as the working, tested pattern — extend the
-  same `EditableText` / `EditableImage` components to other pages the same way.
+- **Click-to-edit CMS**: signed-in admins see a small floating admin button
+  (bottom-right corner — deliberately compact so it never overlaps page
+  content). Opening it and switching on "Edit this site" makes marked text
+  fields directly editable in place (saves on blur) and images get a "Change
+  photo" upload overlay (uploads to Supabase Storage, replacing the fallback
+  colour block). Wired on: Home (hero/promise text, edition cover art, founder
+  photos), Keepers (photos + bios), About, What Arrives, Pricing, and Lost
+  Letters (intro text), plus every edition cover image sitewide. Extend the
+  same `EditableText` / `EditableImage` components to remaining pages the same way.
 - Newsletter signups ("Leave your name in the drawer") save to a real
   `newsletter_subscribers` table
+- **Contact form** saves to a real `contact_messages` table and (once
+  `RESEND_API_KEY` is set) sends the submitter an autoresponder and notifies
+  all 3 admins
+- **Signup notifications**: every new signup emails all 3 admins (once
+  `RESEND_API_KEY` is set)
 
 **Still placeholders, not wired yet:**
 - Payments / subscriptions (Pricing page links to Contact, not real checkout) — Stage 3
 - Lost Letters backend (find-by-code form is present but disabled) — Stage 4
-- Branded transactional email via Resend (Supabase's default auth emails work
-  for signup confirmation, but "dispatch confirmation" etc. don't exist yet) — Stage 5
-- Contact form doesn't send anywhere yet
+- A full visual page-builder (arbitrary block colours, drag-and-drop layout)
+  — what's built is click-to-edit *text* and *images*, not a general design
+  tool; recolouring is still done via `content/palettes.ts` in code
 
 ## Stack
 
@@ -78,6 +86,8 @@ enforced by an `is_admin()` helper + a role-escalation-prevention trigger on
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `SUPABASE_SERVICE_ROLE_KEY`
+   - `RESEND_API_KEY` (optional — without it, signup/contact still saves data,
+     it just skips sending email)
 4. Deploy. Then: Project → Settings → Domains → add `finderskeepersletters.com`
    and set the DNS records Vercel gives you at your domain registrar.
 

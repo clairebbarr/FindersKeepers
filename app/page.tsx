@@ -10,11 +10,15 @@ import { LatestDiscoveries } from "@/components/sections/LatestDiscoveries";
 import { NewsletterDrawer } from "@/components/sections/NewsletterDrawer";
 import { getSiteContentMap, getMediaMap } from "@/lib/site-content/get";
 import { founders } from "@/content/founders";
+import { editions } from "@/content/editions";
 
 export default async function Home() {
   const [contentMap, mediaMap] = await Promise.all([
     getSiteContentMap("home"),
-    getMediaMap(founders.map((f) => `founder-${f.slug}`)),
+    getMediaMap([
+      ...founders.map((f) => `founder-${f.slug}`),
+      ...editions.map((e) => `edition-${e.slug}`),
+    ]),
   ]);
 
   return (
@@ -22,8 +26,8 @@ export default async function Home() {
       <Hero contentMap={contentMap} />
       <PromiseSection contentMap={contentMap} />
       <WhatArrivesPreview />
-      <CurrentEditionSection />
-      <AllEditionsStrip />
+      <CurrentEditionSection mediaMap={mediaMap} />
+      <AllEditionsStrip mediaMap={mediaMap} />
       <OurWhyTeaser />
       <MeetKeepersTeaser mediaMap={mediaMap} />
       <LostLettersTeaser />

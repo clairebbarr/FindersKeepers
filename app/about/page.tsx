@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
 import { ArchivalFrame } from "@/components/brand/ArchivalFrame";
 import { Star4 } from "@/components/brand/icons";
+import { EditableText } from "@/components/admin/EditableText";
 import { ourWhy, aboutSections, brand } from "@/content/site-copy";
+import { getSiteContentMap } from "@/lib/site-content/get";
 
 export const metadata: Metadata = {
   title: "Our Why",
   description: "Why Finders, Keepers exists — a reminder to look for the little treasures in life.",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const contentMap = await getSiteContentMap("about");
+
   return (
     <div className="px-5 py-20 sm:px-8">
       <div className="mx-auto max-w-2xl">
@@ -25,6 +29,15 @@ export default function AboutPage() {
               <p key={i} className="font-display text-2xl italic text-fk-plum text-center">
                 {p}
               </p>
+            ) : i === 0 ? (
+              <EditableText
+                key={i}
+                page="about"
+                section="intro"
+                field="paragraph"
+                as="p"
+                initialValue={contentMap["intro.paragraph"] ?? p}
+              />
             ) : (
               <p key={i}>{p}</p>
             )

@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import { EditionCard } from "@/components/sections/EditionCard";
 import { editions } from "@/content/editions";
+import { getMediaMap } from "@/lib/site-content/get";
 
 export const metadata: Metadata = {
   title: "Editions",
   description: "The full archive of Finders, Keepers editions — past, present and upcoming.",
 };
 
-export default function EditionsPage() {
+export default async function EditionsPage() {
+  const mediaMap = await getMediaMap(editions.map((e) => `edition-${e.slug}`));
+
   return (
     <div className="px-5 py-20 sm:px-8">
       <div className="mx-auto max-w-2xl text-center">
@@ -20,7 +23,7 @@ export default function EditionsPage() {
 
       <div className="mx-auto mt-14 grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {editions.map((edition) => (
-          <EditionCard key={edition.slug} edition={edition} />
+          <EditionCard key={edition.slug} edition={edition} mediaUrl={mediaMap[`edition-${edition.slug}`] ?? null} />
         ))}
       </div>
     </div>

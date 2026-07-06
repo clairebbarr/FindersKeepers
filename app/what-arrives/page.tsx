@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Card } from "@/components/ui/Card";
 import { Star8, Key, PressedFlower, Envelope, WaxSeal } from "@/components/brand/icons";
 import { LinkButton } from "@/components/ui/Button";
+import { EditableText } from "@/components/admin/EditableText";
 import { whatArrivesCategories } from "@/content/site-copy";
+import { getSiteContentMap } from "@/lib/site-content/get";
 
 export const metadata: Metadata = {
   title: "What Arrives",
@@ -11,14 +13,21 @@ export const metadata: Metadata = {
 
 const icons = [Star8, Key, PressedFlower, Envelope, WaxSeal];
 
-export default function WhatArrivesPage() {
+export default async function WhatArrivesPage() {
+  const contentMap = await getSiteContentMap("what-arrives");
+
   return (
     <div className="px-5 py-20 sm:px-8">
       <div className="mx-auto max-w-4xl text-center">
         <h1 className="font-display text-4xl font-semibold text-fk-plum sm:text-5xl">What Arrives</h1>
-        <p className="mt-4 font-body text-lg text-fk-ink/75">
-          Not every envelope contains the same things. That is the point.
-        </p>
+        <EditableText
+          page="what-arrives"
+          section="intro"
+          field="subheading"
+          as="p"
+          className="mt-4 font-body text-lg text-fk-ink/75"
+          initialValue={contentMap["intro.subheading"] ?? "Not every envelope contains the same things. That is the point."}
+        />
       </div>
 
       <div className="mx-auto mt-14 flex max-w-4xl flex-col gap-8">

@@ -4,7 +4,9 @@ import { Envelope, Star8 } from "@/components/brand/icons";
 import { Label, Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Card";
+import { EditableText } from "@/components/admin/EditableText";
 import { lostLetters, marketingPlanNote } from "@/content/site-copy";
+import { getSiteContentMap } from "@/lib/site-content/get";
 
 export const metadata: Metadata = {
   title: "Lost Letters",
@@ -13,7 +15,9 @@ export const metadata: Metadata = {
 
 const waitingCities = ["London", "Bristol", "Manchester", "Edinburgh"];
 
-export default function LostLettersPage() {
+export default async function LostLettersPage() {
+  const contentMap = await getSiteContentMap("lost-letters");
+
   return (
     <div className="px-5 py-20 sm:px-8">
       <div className="mx-auto max-w-2xl text-center">
@@ -21,7 +25,14 @@ export default function LostLettersPage() {
         <h1 className="mt-4 font-display text-4xl font-semibold text-fk-plum sm:text-5xl">
           {lostLetters.heading}
         </h1>
-        <p className="mt-4 font-body text-lg text-fk-ink/80">{lostLetters.intro}</p>
+        <EditableText
+          page="lost-letters"
+          section="intro"
+          field="body"
+          as="p"
+          className="mt-4 font-body text-lg text-fk-ink/80"
+          initialValue={contentMap["intro.body"] ?? lostLetters.intro}
+        />
         <p className="mt-4 font-body text-sm italic text-fk-ink/60">{lostLetters.instruction}</p>
       </div>
 

@@ -1,23 +1,34 @@
 import type { Metadata } from "next";
 import { Card, Badge } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
+import { EditableText } from "@/components/admin/EditableText";
 import { pricingPlans } from "@/content/pricing-plans";
 import { pricingFaq } from "@/content/faq";
+import { getSiteContentMap } from "@/lib/site-content/get";
 
 export const metadata: Metadata = {
   title: "Pricing",
   description: "Join the Finders, Keepers waitlist — bimonthly subscriptions, memberships, gifts and one-off editions.",
 };
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  const contentMap = await getSiteContentMap("pricing");
+
   return (
     <div className="px-5 py-20 sm:px-8">
       <div className="mx-auto max-w-2xl text-center">
         <h1 className="font-display text-4xl font-semibold text-fk-plum sm:text-5xl">Pricing</h1>
-        <p className="mt-4 font-body text-lg text-fk-ink/75">
-          Real dispatch dates and prices are being finalised — join the waitlist now and we&apos;ll let you know
-          the moment checkout opens.
-        </p>
+        <EditableText
+          page="pricing"
+          section="intro"
+          field="subheading"
+          as="p"
+          className="mt-4 font-body text-lg text-fk-ink/75"
+          initialValue={
+            contentMap["intro.subheading"] ??
+            "Real dispatch dates and prices are being finalised — join the waitlist now and we'll let you know the moment checkout opens."
+          }
+        />
       </div>
 
       <div className="mx-auto mt-14 grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-4">

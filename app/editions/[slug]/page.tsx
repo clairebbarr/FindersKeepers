@@ -3,8 +3,10 @@ import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 import { Star4 } from "@/components/brand/icons";
+import { EditableImage } from "@/components/admin/EditableImage";
 import { editions, getEdition } from "@/content/editions";
 import { getPalette } from "@/content/palettes";
+import { getMediaMap } from "@/lib/site-content/get";
 
 export function generateStaticParams() {
   return editions.map((e) => ({ slug: e.slug }));
@@ -34,16 +36,25 @@ export default async function EditionDetailPage({
   if (!edition) notFound();
 
   const palette = getPalette(edition.paletteKey);
+  const mediaMap = await getMediaMap([`edition-${edition.slug}`]);
 
   return (
     <div className="px-5 py-20 sm:px-8">
       <div className="mx-auto max-w-3xl">
-        <div
-          className="flex aspect-[16/9] items-center justify-center"
-          style={{ backgroundColor: palette.colors.primary }}
-        >
-          <Star4 className="h-16 w-16" style={{ color: palette.colors.accent }} />
-        </div>
+        <EditableImage
+          mediaKey={`edition-${edition.slug}`}
+          initialUrl={mediaMap[`edition-${edition.slug}`] ?? null}
+          alt={`${edition.name} cover`}
+          className="aspect-[16/9]"
+          fallback={
+            <div
+              className="flex h-full w-full items-center justify-center"
+              style={{ backgroundColor: palette.colors.primary }}
+            >
+              <Star4 className="h-16 w-16" style={{ color: palette.colors.accent }} />
+            </div>
+          }
+        />
 
         <Badge className="mt-8 w-fit" style={{ borderColor: palette.colors.primary, color: palette.colors.primary }}>
           Edition {edition.number} &middot; {edition.status}

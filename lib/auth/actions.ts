@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { notifyAdmins } from "@/lib/email/resend";
+import { newSignupAdminNotificationEmail } from "@/lib/email/templates";
 
 export type AuthActionState = { error: string | null };
 
@@ -34,6 +36,11 @@ export async function signup(_prevState: AuthActionState, formData: FormData): P
   if (error) {
     return { error: error.message };
   }
+
+  await notifyAdmins(
+    `New signup: ${fullName || email}`,
+    newSignupAdminNotificationEmail({ name: fullName, email })
+  );
 
   revalidatePath("/", "layout");
 

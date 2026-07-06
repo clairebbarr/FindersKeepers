@@ -1,28 +1,25 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useActionState } from "react";
 import { Label, Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { submitContactMessage, type ContactState } from "@/lib/contact/actions";
+
+const initialState: ContactState = { status: "idle" };
 
 export function ContactForm() {
-  const [status, setStatus] = useState<"idle" | "submitted">("idle");
+  const [state, formAction, pending] = useActionState(submitContactMessage, initialState);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setStatus("submitted");
-  }
-
-  if (status === "submitted") {
+  if (state.status === "success") {
     return (
       <p className="border border-fk-mint bg-fk-mint/20 px-6 py-4 text-center font-body text-fk-plum">
-        Thank you for your message. (This form isn&apos;t connected to email delivery yet — that arrives in a
-        later stage of the build. For now, please reach us on Instagram.)
+        Thank you for your message — we&apos;ll be in touch within 24 hours.
       </p>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form action={formAction} className="space-y-5">
       <div>
         <Label htmlFor="contact-name">Name</Label>
         <Input id="contact-name" name="name" required />
@@ -41,8 +38,11 @@ export function ContactForm() {
           className="w-full border border-fk-ink/30 bg-fk-cream px-4 py-2.5 font-body text-fk-ink placeholder:text-fk-ink/40 focus:border-fk-plum focus:outline-none"
         />
       </div>
-      <Button type="submit" className="w-full">
-        Send message
+      {state.status === "error" ? (
+        <p className="font-body text-sm text-fk-rust">{state.message}</p>
+      ) : null}
+      <Button type="submit" disabled={pending} className="w-full">
+        {pending ? "Sending..." : "Send message"}
       </Button>
     </form>
   );

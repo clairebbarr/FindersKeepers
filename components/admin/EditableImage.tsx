@@ -57,14 +57,27 @@ export function EditableImage({
       {isAdmin && editMode ? (
         <button
           type="button"
-          onClick={() => inputRef.current?.click()}
+          onClick={(e) => {
+            // this control often sits inside a card <Link> (e.g. edition
+            // covers) — never let opening the file picker also navigate.
+            e.preventDefault();
+            e.stopPropagation();
+            inputRef.current?.click();
+          }}
           disabled={uploading}
           className="absolute inset-0 flex items-center justify-center bg-fk-plum/75 font-body text-xs uppercase tracking-wide text-fk-cream opacity-0 transition-opacity hover:opacity-100"
         >
           {uploading ? "Uploading..." : "Change photo"}
         </button>
       ) : null}
-      <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onClick={(e) => e.stopPropagation()}
+        onChange={handleFile}
+      />
     </div>
   );
 }
