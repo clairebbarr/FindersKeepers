@@ -21,8 +21,10 @@ const secondaryNav = [
   { label: "Contact", href: "/contact" },
 ];
 
-export function SiteHeader() {
+export function SiteHeader({ loggedIn = false }: { loggedIn?: boolean }) {
   const [open, setOpen] = useState(false);
+  const accountHref = loggedIn ? "/account" : "/login";
+  const accountLabel = loggedIn ? "Account" : "Login";
 
   return (
     <header className="sticky top-0 z-40 border-b-2 border-fk-plum bg-fk-cream/95 backdrop-blur">
@@ -45,8 +47,8 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <Link href="/login" className="font-body text-sm text-fk-ink/80 hover:text-fk-plum">
-            Login
+          <Link href={accountHref} className="font-body text-sm text-fk-ink/80 hover:text-fk-plum">
+            {accountLabel}
           </Link>
           <LinkButton href="/pricing" className="text-xs sm:text-sm">
             Join the next edition
@@ -84,11 +86,11 @@ export function SiteHeader() {
             </Link>
           ))}
           <Link
-            href="/login"
+            href={accountHref}
             onClick={() => setOpen(false)}
             className="border-b border-fk-ink/5 py-3 font-body text-base text-fk-ink/85"
           >
-            Login
+            {accountLabel}
           </Link>
           <LinkButton href="/pricing" className="mt-4 w-full">
             Join the next edition

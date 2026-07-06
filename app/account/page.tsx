@@ -1,19 +1,26 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { ArchivalFrame } from "@/components/brand/ArchivalFrame";
 import { Key } from "@/components/brand/icons";
-import { LinkButton } from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
+import { getCurrentProfile, isAdminRole } from "@/lib/auth/current-profile";
+import { signOut } from "@/lib/auth/actions";
 
 export const metadata: Metadata = { title: "Account" };
 
 const upcoming = [
-  "Subscription status and billing portal",
-  "Address management",
-  "Edition and order history",
-  "Saved Lost Letters",
-  "Newsletter preferences",
+  "Subscription status and billing portal (Stage 3)",
+  "Address management (Stage 3)",
+  "Edition and order history (Stage 3)",
+  "Saved Lost Letters (Stage 4)",
 ];
 
-export default function AccountPage() {
+export default async function AccountPage() {
+  const profile = await getCurrentProfile();
+  if (!profile) {
+    redirect("/login");
+  }
+
   return (
     <div className="px-5 py-20 sm:px-8">
       <div className="mx-auto max-w-lg text-center">
@@ -21,22 +28,37 @@ export default function AccountPage() {
         <h1 className="mt-4 font-display text-4xl font-semibold text-fk-plum">Account</h1>
 
         <ArchivalFrame className="mt-10 text-left">
-          <p className="font-body text-sm text-fk-ink/70">
-            The account dashboard arrives with Stage 2 (Supabase auth) and Stage 3 (Stripe billing) of the
-            build. Once live, this page will include:
+          <p className="font-body text-sm text-fk-ink/60">Signed in as</p>
+          <p className="font-display text-xl font-semibold text-fk-plum">
+            {profile.full_name || profile.email}
           </p>
-          <ul className="mt-4 space-y-2">
-            {upcoming.map((item) => (
-              <li key={item} className="font-body text-sm text-fk-ink/80">
-                &bull; {item}
-              </li>
-            ))}
-          </ul>
-        </ArchivalFrame>
+          <p className="font-body text-sm text-fk-ink/70">{profile.email}</p>
+          {isAdminRole(profile.role) ? (
+            <p className="mt-2 inline-block rounded-full border border-fk-rust px-3 py-1 font-body text-xs uppercase tracking-[0.15em] text-fk-rust">
+              {profile.role} — use the edit mode toggle to update site content
+            </p>
+          ) : null}
 
-        <LinkButton href="/" variant="ghost" className="mt-8">
-          Back to home
-        </LinkButton>
+          <div className="mt-6 border-t border-fk-plum/20 pt-6">
+            <p className="font-body text-sm text-fk-ink/70">
+              The rest of the account dashboard (subscriptions, orders, addresses) arrives with later
+              stages of the build:
+            </p>
+            <ul className="mt-3 space-y-1">
+              {upcoming.map((item) => (
+                <li key={item} className="font-body text-sm text-fk-ink/60">
+                  &bull; {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <form action={signOut} className="mt-6">
+            <Button type="submit" variant="ghost" className="w-full">
+              Sign out
+            </Button>
+          </form>
+        </ArchivalFrame>
       </div>
     </div>
   );

@@ -8,17 +8,24 @@ import { MeetKeepersTeaser } from "@/components/sections/MeetKeepersTeaser";
 import { LostLettersTeaser } from "@/components/sections/LostLettersTeaser";
 import { LatestDiscoveries } from "@/components/sections/LatestDiscoveries";
 import { NewsletterDrawer } from "@/components/sections/NewsletterDrawer";
+import { getSiteContentMap, getMediaMap } from "@/lib/site-content/get";
+import { founders } from "@/content/founders";
 
-export default function Home() {
+export default async function Home() {
+  const [contentMap, mediaMap] = await Promise.all([
+    getSiteContentMap("home"),
+    getMediaMap(founders.map((f) => `founder-${f.slug}`)),
+  ]);
+
   return (
     <>
-      <Hero />
-      <PromiseSection />
+      <Hero contentMap={contentMap} />
+      <PromiseSection contentMap={contentMap} />
       <WhatArrivesPreview />
       <CurrentEditionSection />
       <AllEditionsStrip />
       <OurWhyTeaser />
-      <MeetKeepersTeaser />
+      <MeetKeepersTeaser mediaMap={mediaMap} />
       <LostLettersTeaser />
       <LatestDiscoveries />
       <NewsletterDrawer />

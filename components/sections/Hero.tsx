@@ -11,19 +11,25 @@ import {
   Envelope,
 } from "@/components/brand/icons";
 import { LinkButton } from "@/components/ui/Button";
+import { EditableText } from "@/components/admin/EditableText";
 import { home } from "@/content/site-copy";
 
 const specimens = [Star8, Key, Shell, Moth, PressedFlower, Bow, Teacup, Book, Envelope];
 
-export function Hero() {
+export function Hero({ contentMap = {} }: { contentMap?: Record<string, string> }) {
   return (
     <section className="paper-grain relative overflow-hidden bg-fk-plum text-fk-mint">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[1.35fr_1fr] lg:items-center">
         {/* Left: wordmark + list */}
         <div className="relative">
-          <p className="font-body text-[0.65rem] uppercase tracking-[0.18em] text-fk-mint/70 sm:text-xs sm:tracking-[0.3em]">
-            {home.heroEyebrow}
-          </p>
+          <EditableText
+            page="home"
+            section="hero"
+            field="eyebrow"
+            as="p"
+            className="font-body text-[0.65rem] uppercase tracking-[0.18em] text-fk-mint/70 sm:text-xs sm:tracking-[0.3em]"
+            initialValue={contentMap["hero.eyebrow"] ?? home.heroEyebrow}
+          />
 
           <Wordmark stacked className="mt-4 text-[3.5rem] leading-[0.82] text-fk-mint sm:text-8xl" />
 
@@ -62,9 +68,14 @@ export function Hero() {
               </div>
             ))}
           </div>
-          <p className="mt-4 text-center font-body text-xs uppercase tracking-[0.2em] text-fk-mint/80">
-            {home.heroMark}
-          </p>
+          <EditableText
+            page="home"
+            section="hero"
+            field="mark"
+            as="p"
+            className="mt-4 text-center font-body text-xs uppercase tracking-[0.2em] text-fk-mint/80"
+            initialValue={contentMap["hero.mark"] ?? home.heroMark}
+          />
         </div>
       </div>
 
