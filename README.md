@@ -49,16 +49,38 @@ Palette hex values and the three founder profiles in `content/founders.ts` are
 realistic placeholders, not measurements from a final brand guide — replace them
 with the real values/photos when available.
 
-## What Stage 2+ will need
+## Deploying (Vercel)
 
-- A Supabase project (URL + anon/service-role keys) for auth, database, and
-  storage
-- A Stripe account (API keys + webhook secret) for subscriptions/checkout
-- A Resend account (API key) for transactional email
-- A Vercel project for deployment + environment variables
+1. Push to GitHub (already done — `clairebbarr/FindersKeepers`, `master` branch).
+2. At https://vercel.com/new, **Import Git Repository**, select this repo.
+   Next.js is auto-detected — no build config needed. Click Deploy.
+3. Once deployed: Project → Settings → Domains → add `finderskeepersletters.com`,
+   then set the DNS records Vercel gives you at your domain registrar.
 
-None of these exist yet — get them ready before starting Stage 2 (Supabase auth,
-admin roles, media uploads, edition manager).
+This step needs your own Vercel account login (browser OAuth), which can't be
+done from an automated session — do this part yourself, then hand off any
+build errors.
+
+## Starting Stage 2 (Supabase)
+
+Copy `.env.example` to `.env.local` and fill in the Supabase values once you've
+created a project at https://supabase.com/dashboard → New Project → Project
+Settings → API:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY` (server-only — never expose to the browser)
+
+`lib/supabase/client.ts` and `lib/supabase/server.ts` are already in place
+(Supabase's official Next.js App Router SSR pattern) but **not wired into any
+page yet** — deliberately, so the current Vercel deployment can't break from
+missing env vars. Once real credentials exist, add the same values as
+environment variables in the Vercel project (Settings → Environment
+Variables) before wiring up login/signup/database features.
+
+Also needed later:
+- A Stripe account (API keys + webhook secret) for Stage 3 subscriptions/checkout
+- A Resend account (API key) for Stage 5 transactional email
 
 ## Project structure
 
