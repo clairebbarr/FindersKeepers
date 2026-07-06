@@ -1,0 +1,49 @@
+"use client";
+
+import { useState, type FormEvent } from "react";
+import { Label, Input } from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
+
+export function ContactForm() {
+  const [status, setStatus] = useState<"idle" | "submitted">("idle");
+
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setStatus("submitted");
+  }
+
+  if (status === "submitted") {
+    return (
+      <p className="border border-fk-mint bg-fk-mint/20 px-6 py-4 text-center font-body text-fk-plum">
+        Thank you for your message. (This form isn&apos;t connected to email delivery yet — that arrives in a
+        later stage of the build. For now, please reach us on Instagram.)
+      </p>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <div>
+        <Label htmlFor="contact-name">Name</Label>
+        <Input id="contact-name" name="name" required />
+      </div>
+      <div>
+        <Label htmlFor="contact-email">Email</Label>
+        <Input id="contact-email" name="email" type="email" required />
+      </div>
+      <div>
+        <Label htmlFor="contact-message">Message</Label>
+        <textarea
+          id="contact-message"
+          name="message"
+          required
+          rows={5}
+          className="w-full border border-fk-ink/30 bg-fk-cream px-4 py-2.5 font-body text-fk-ink placeholder:text-fk-ink/40 focus:border-fk-plum focus:outline-none"
+        />
+      </div>
+      <Button type="submit" className="w-full">
+        Send message
+      </Button>
+    </form>
+  );
+}

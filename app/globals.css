@@ -1,26 +1,60 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* Core brand palette — matched to the founders' reference board
+     (Autumn "Aubergine & Mint" colourway). */
+  --color-fk-cream: #f7f5ef;
+  --color-fk-paper: #ece7d6;
+  --color-fk-ink: #2a1226;
+  --color-fk-plum: #4a214b;
+  --color-fk-plum-dark: #351533;
+  --color-fk-mint: #b6e8ce;
+  --color-fk-mint-dark: #8fd3b4;
+  --color-fk-rust: #f06d30;
+  --color-fk-rust-dark: #d1541c;
+  --color-fk-dustyblue: #7fa7b3;
+  --color-fk-mustard: #e8b84b;
+  --color-fk-stone: #ded7c2;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Fonts */
+  --font-display: var(--font-fraunces);
+  --font-body: var(--font-spectral);
+  --font-script: var(--font-caveat);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-fk-cream);
+  color: var(--color-fk-ink);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.paper-grain {
+  position: relative;
+}
+
+.paper-grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  background-image: radial-gradient(currentColor 0.5px, transparent 0.6px);
+  background-size: 4px 4px;
 }
