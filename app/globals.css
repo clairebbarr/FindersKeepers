@@ -44,17 +44,3 @@ h4 {
     scroll-behavior: auto !important;
   }
 }
-
-.paper-grain {
-  position: relative;
-}
-
-.paper-grain::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.08;
-  background-image: radial-gradient(currentColor 0.5px, transparent 0.6px);
-  background-size: 4px 4px;
-}

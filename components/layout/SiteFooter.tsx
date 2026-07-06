@@ -1,11 +1,29 @@
 import Link from "next/link";
 import { Wordmark } from "@/components/brand/Wordmark";
 import { Star8 } from "@/components/brand/icons";
+import { ColorEditableSection } from "@/components/admin/ColorEditableSection";
 import { brand, nav, footerLinks } from "@/content/site-copy";
+import { getSiteContentMap, getColorOverrides } from "@/lib/site-content/get";
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const [contentMap, colorOverrides] = await Promise.all([
+    getSiteContentMap("global"),
+    getColorOverrides(),
+  ]);
+  const blockOverride = contentMap["footer.bgColor"] ?? null;
+  const effectiveHex = blockOverride ?? colorOverrides["plum"] ?? "#4a214b";
+
   return (
-    <footer className="border-t border-fk-ink/10 bg-fk-plum text-fk-cream">
+    <ColorEditableSection
+      as="footer"
+      className="border-t border-fk-ink/10 bg-fk-plum text-fk-cream"
+      tokenKey="plum"
+      page="global"
+      section="footer"
+      field="bgColor"
+      effectiveHex={effectiveHex}
+      blockOverrideHex={blockOverride}
+    >
       <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
@@ -75,6 +93,6 @@ export function SiteFooter() {
           <p className="font-body text-xs text-fk-cream/50">{brand.tagline}</p>
         </div>
       </div>
-    </footer>
+    </ColorEditableSection>
   );
 }

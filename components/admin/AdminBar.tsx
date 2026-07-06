@@ -25,6 +25,12 @@ export function AdminBar({ name }: { name: string }) {
           >
             {editMode ? "Editing — click to stop" : "Edit this site"}
           </button>
+          <Link
+            href="/admin"
+            className="mt-3 block w-full rounded-full border border-fk-plum px-4 py-2 text-center font-body text-sm font-semibold text-fk-plum"
+          >
+            Admin Dashboard
+          </Link>
           <div className="mt-3 flex items-center justify-between">
             <Link href="/account" className="font-body text-xs text-fk-ink/60 underline underline-offset-2">
               Account

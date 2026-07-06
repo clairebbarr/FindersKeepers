@@ -12,13 +12,31 @@ import {
 } from "@/components/brand/icons";
 import { LinkButton } from "@/components/ui/Button";
 import { EditableText } from "@/components/admin/EditableText";
+import { ColorEditableSection } from "@/components/admin/ColorEditableSection";
 import { home } from "@/content/site-copy";
 
 const specimens = [Star8, Key, Shell, Moth, PressedFlower, Bow, Teacup, Book, Envelope];
 
-export function Hero({ contentMap = {} }: { contentMap?: Record<string, string> }) {
+export function Hero({
+  contentMap = {},
+  colorOverrides = {},
+}: {
+  contentMap?: Record<string, string>;
+  colorOverrides?: Record<string, string>;
+}) {
+  const blockOverride = contentMap["hero.bgColor"] ?? null;
+  const effectiveHex = blockOverride ?? colorOverrides["plum"] ?? "#4a214b";
+
   return (
-    <section className="paper-grain relative overflow-hidden bg-fk-plum text-fk-mint">
+    <ColorEditableSection
+      className="overflow-hidden bg-fk-plum text-fk-mint"
+      tokenKey="plum"
+      page="home"
+      section="hero"
+      field="bgColor"
+      effectiveHex={effectiveHex}
+      blockOverrideHex={blockOverride}
+    >
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[1.35fr_1fr] lg:items-center">
         {/* Left: wordmark + list */}
         <div className="relative">
@@ -86,6 +104,6 @@ export function Hero({ contentMap = {} }: { contentMap?: Record<string, string> 
           <span className="text-fk-rust">✶</span> Create <span className="text-fk-rust">✶</span> Share
         </p>
       </div>
-    </section>
+    </ColorEditableSection>
   );
 }

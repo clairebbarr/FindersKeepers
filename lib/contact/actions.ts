@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { sendEmail, notifyAdmins } from "@/lib/email/resend";
 import { contactAutoresponderEmail, contactAdminNotificationEmail } from "@/lib/email/templates";
@@ -31,4 +32,13 @@ export async function submitContactMessage(
   ]);
 
   return { status: "success" };
+}
+
+/** Admin-only — RLS also enforces this, this just gives a clean error. */
+export async function setMessageHandled(id: string, handled: boolean) {
+  const supabase = await createClient();
+  const { error } = await supabase.from("contact_messages").update({ handled }).eq("id", id);
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin/messages");
+  revalidatePath("/admin");
 }

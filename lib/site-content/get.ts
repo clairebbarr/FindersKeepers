@@ -32,3 +32,20 @@ export async function getMediaMap(keys: string[]): Promise<Record<string, string
     return {};
   }
 }
+
+/** Global brand colour token overrides (e.g. "plum" -> "#4a214b"), keyed by
+ *  the same short name used in --color-fk-<key> / bg-fk-<key> classes. */
+export async function getColorOverrides(): Promise<Record<string, string>> {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return {};
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase.from("site_colors").select("token_key, value");
+    const map: Record<string, string> = {};
+    (data ?? []).forEach((row) => {
+      map[row.token_key] = row.value;
+    });
+    return map;
+  } catch {
+    return {};
+  }
+}

@@ -1,10 +1,28 @@
 import { Envelope, Star8 } from "@/components/brand/icons";
 import { LinkButton } from "@/components/ui/Button";
+import { ColorEditableSection } from "@/components/admin/ColorEditableSection";
 import { lostLetters } from "@/content/site-copy";
 
-export function LostLettersTeaser() {
+export function LostLettersTeaser({
+  contentMap = {},
+  colorOverrides = {},
+}: {
+  contentMap?: Record<string, string>;
+  colorOverrides?: Record<string, string>;
+}) {
+  const blockOverride = contentMap["lost-letters-teaser.bgColor"] ?? null;
+  const effectiveHex = blockOverride ?? colorOverrides["plum"] ?? "#4a214b";
+
   return (
-    <section className="paper-grain relative overflow-hidden bg-fk-plum px-5 py-20 text-fk-mint sm:px-8">
+    <ColorEditableSection
+      className="overflow-hidden bg-fk-plum px-5 py-20 text-fk-mint sm:px-8"
+      tokenKey="plum"
+      page="home"
+      section="lost-letters-teaser"
+      field="bgColor"
+      effectiveHex={effectiveHex}
+      blockOverrideHex={blockOverride}
+    >
       <Star8 className="absolute right-6 top-8 h-12 w-12 text-fk-rust/60" />
       <div className="mx-auto max-w-2xl text-center">
         <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border-2 border-fk-mint">
@@ -22,6 +40,6 @@ export function LostLettersTeaser() {
           Find a Lost Letter
         </LinkButton>
       </div>
-    </section>
+    </ColorEditableSection>
   );
 }

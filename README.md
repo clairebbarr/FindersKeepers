@@ -26,13 +26,25 @@ A curated, seasonal physical-mail club. "We do the finding. You do the keeping."
   all 3 admins
 - **Signup notifications**: every new signup emails all 3 admins (once
   `RESEND_API_KEY` is set)
+- **Colour editing**, two scopes, both verified end-to-end: click the 🎨
+  button that appears on a coloured section in edit mode, pick a colour, then
+  choose **"Just this block"** (stored per-block, doesn't affect anything
+  else) or **"Everywhere on the site"** (updates the shared brand token —
+  every element using that colour changes at once, since they all read the
+  same CSS variable). The same "everywhere" tokens can also be managed from
+  a plain list at `/admin/colours`.
+- **Full admin dashboard** at `/admin` (admin/owner only, redirects everyone
+  else): overview stats, `/admin/messages` (contact submissions, mark
+  handled), `/admin/subscribers` (newsletter list), `/admin/colours` (brand
+  colour tokens).
 
 **Still placeholders, not wired yet:**
 - Payments / subscriptions (Pricing page links to Contact, not real checkout) — Stage 3
 - Lost Letters backend (find-by-code form is present but disabled) — Stage 4
-- A full visual page-builder (arbitrary block colours, drag-and-drop layout)
-  — what's built is click-to-edit *text* and *images*, not a general design
-  tool; recolouring is still done via `content/palettes.ts` in code
+- A full drag-and-drop visual page-builder (rearranging layout, swapping a
+  colour block for an image block, etc.) — what's built is click-to-edit
+  *text*, *images*, and *colours* on the existing layout, not a general
+  design tool
 
 ## Stack
 
@@ -111,15 +123,19 @@ since they vary per edition rather than being global brand colours.
 
 ```
 app/                    Routes (App Router)
-components/admin/       EditModeContext, AdminBar, EditableText, EditableImage
+app/admin/              Admin dashboard (overview, messages, subscribers, colours) — admin-only
+components/admin/       EditModeContext, AdminBar, EditableText, EditableImage, ColorEditableSection
 components/brand/       Hand-authored SVG icon library, Wordmark, PublisherMark
 components/layout/      SiteHeader, SiteFooter, LegalPage wrapper
 components/sections/    Homepage section components
 components/ui/          Reskinned Button, Card, Badge, Input primitives
 content/                Typed default content (editions, founders, journal, pricing, FAQ, copy, palettes)
 lib/auth/               Login/signup/sign-out server actions, current-profile helper
-lib/site-content/       Read (get.ts) and write (actions.ts) for the CMS store
+lib/site-content/       Read (get.ts), text/image writes (actions.ts), colour tokens +
+                         writes (color-tokens.ts, color-actions.ts) for the CMS store
 lib/newsletter/         Newsletter signup server action
+lib/contact/            Contact form + mark-handled server actions
+lib/email/              Resend wrapper (resend.ts) + branded HTML templates (templates.ts)
 lib/supabase/           Browser/server/middleware Supabase clients
 supabase/migrations/    SQL schema, applied via scripts/db-migrate.mjs
 proxy.ts                Session-refresh middleware (Next.js 16 "proxy" convention)

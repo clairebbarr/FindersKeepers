@@ -1,11 +1,31 @@
 import { LinkButton } from "@/components/ui/Button";
 import { Star4, Star8 } from "@/components/brand/icons";
 import { EditableImage } from "@/components/admin/EditableImage";
+import { ColorEditableSection } from "@/components/admin/ColorEditableSection";
 import { founders } from "@/content/founders";
 
-export function MeetKeepersTeaser({ mediaMap = {} }: { mediaMap?: Record<string, string> }) {
+export function MeetKeepersTeaser({
+  mediaMap = {},
+  contentMap = {},
+  colorOverrides = {},
+}: {
+  mediaMap?: Record<string, string>;
+  contentMap?: Record<string, string>;
+  colorOverrides?: Record<string, string>;
+}) {
+  const blockOverride = contentMap["keepers-teaser.bgColor"] ?? null;
+  const effectiveHex = blockOverride ?? colorOverrides["mint"] ?? "#b6e8ce";
+
   return (
-    <section className="relative overflow-hidden bg-fk-mint px-5 py-20 sm:px-8">
+    <ColorEditableSection
+      className="overflow-hidden bg-fk-mint px-5 py-20 sm:px-8"
+      tokenKey="mint"
+      page="home"
+      section="keepers-teaser"
+      field="bgColor"
+      effectiveHex={effectiveHex}
+      blockOverrideHex={blockOverride}
+    >
       <Star8 className="absolute -left-4 top-8 h-16 w-16 text-fk-plum/10" />
       <div className="mx-auto max-w-5xl">
         <div className="mx-auto max-w-2xl text-center">
@@ -46,6 +66,6 @@ export function MeetKeepersTeaser({ mediaMap = {} }: { mediaMap?: Record<string,
           </LinkButton>
         </div>
       </div>
-    </section>
+    </ColorEditableSection>
   );
 }

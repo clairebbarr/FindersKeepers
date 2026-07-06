@@ -7,7 +7,7 @@ const tilts = ["-2deg", "1.5deg", "-1deg", "2deg", "-1.5deg"];
 
 export function WhatArrivesPreview() {
   return (
-    <section className="paper-grain bg-fk-paper px-5 py-20 sm:px-8">
+    <section className="bg-fk-paper px-5 py-20 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-2xl text-center">
           <p className="font-body text-xs uppercase tracking-[0.3em] text-fk-rust">Inside every envelope</p>

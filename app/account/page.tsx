@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { ArchivalFrame } from "@/components/brand/ArchivalFrame";
 import { Key } from "@/components/brand/icons";
-import { Button } from "@/components/ui/Button";
+import { Button, LinkButton } from "@/components/ui/Button";
 import { getCurrentProfile, isAdminRole } from "@/lib/auth/current-profile";
 import { signOut } from "@/lib/auth/actions";
 
@@ -34,9 +34,14 @@ export default async function AccountPage() {
           </p>
           <p className="font-body text-sm text-fk-ink/70">{profile.email}</p>
           {isAdminRole(profile.role) ? (
-            <p className="mt-2 inline-block rounded-full border border-fk-rust px-3 py-1 font-body text-xs uppercase tracking-[0.15em] text-fk-rust">
-              {profile.role} — use the edit mode toggle to update site content
-            </p>
+            <>
+              <p className="mt-2 inline-block rounded-full border border-fk-rust px-3 py-1 font-body text-xs uppercase tracking-[0.15em] text-fk-rust">
+                {profile.role}
+              </p>
+              <LinkButton href="/admin" className="mt-4 w-full">
+                Open Admin Dashboard
+              </LinkButton>
+            </>
           ) : null}
 
           <div className="mt-6 border-t border-fk-plum/20 pt-6">

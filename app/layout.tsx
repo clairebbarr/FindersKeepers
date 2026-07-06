@@ -5,6 +5,8 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { EditModeProvider } from "@/components/admin/EditModeContext";
 import { AdminBar } from "@/components/admin/AdminBar";
 import { getCurrentProfile, isAdminRole } from "@/lib/auth/current-profile";
+import { getColorOverrides } from "@/lib/site-content/get";
+import { BRAND_COLOR_TOKENS } from "@/lib/site-content/color-tokens";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -28,15 +30,25 @@ export const metadata: Metadata = {
   },
 };
 
+const HEX_RE = /^#[0-9a-fA-F]{6}$/;
+const VALID_TOKEN_KEYS: Set<string> = new Set(BRAND_COLOR_TOKENS.map((t) => t.key));
+
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const profile = await getCurrentProfile();
+  const [profile, colorOverrides] = await Promise.all([getCurrentProfile(), getColorOverrides()]);
   const isAdmin = isAdminRole(profile?.role);
+
+  // whitelist token names + validate hex before ever writing into a <style> tag
+  const safeVars = Object.entries(colorOverrides)
+    .filter(([key, value]) => VALID_TOKEN_KEYS.has(key) && HEX_RE.test(value))
+    .map(([key, value]) => `--color-fk-${key}:${value};`)
+    .join("");
 
   return (
     <html
       lang="en"
       className={`${displayFont.variable} ${bodyFont.variable} ${scriptFont.variable} h-full antialiased`}
     >
+      <head>{safeVars ? <style dangerouslySetInnerHTML={{ __html: `:root{${safeVars}}` }} /> : null}</head>
       <body className="flex min-h-full flex-col bg-fk-cream font-body text-fk-ink">
         <EditModeProvider isAdmin={isAdmin}>
           <SiteHeader loggedIn={!!profile} />
