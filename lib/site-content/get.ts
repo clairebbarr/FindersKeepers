@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { rethrowIfDynamicServerUsage } from "@/lib/supabase/errors";
 
 /** Editable text overrides for a page, keyed "section.field". Falls back to
  *  an empty map (callers use their own static default) if unset/unreachable. */
@@ -12,7 +13,8 @@ export async function getSiteContentMap(page: string): Promise<Record<string, st
       map[`${row.section}.${row.field}`] = row.value ?? "";
     });
     return map;
-  } catch {
+  } catch (err) {
+    rethrowIfDynamicServerUsage(err);
     return {};
   }
 }
@@ -28,7 +30,8 @@ export async function getMediaMap(keys: string[]): Promise<Record<string, string
       map[row.key] = row.url;
     });
     return map;
-  } catch {
+  } catch (err) {
+    rethrowIfDynamicServerUsage(err);
     return {};
   }
 }
@@ -45,7 +48,8 @@ export async function getColorOverrides(): Promise<Record<string, string>> {
       map[row.token_key] = row.value;
     });
     return map;
-  } catch {
+  } catch (err) {
+    rethrowIfDynamicServerUsage(err);
     return {};
   }
 }

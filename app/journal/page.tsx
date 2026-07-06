@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
 import { JournalGrid } from "@/components/sections/JournalGrid";
+import { AddJournalPostForm } from "@/components/admin/AddJournalPostForm";
+import { getAllJournalPosts } from "@/lib/journal/get";
 
 export const metadata: Metadata = {
   title: "Journal",
   description: "Things we've noticed, collected, found, made, and think are worth keeping.",
 };
 
-export default function JournalPage() {
+export default async function JournalPage() {
+  const posts = await getAllJournalPosts();
+
   return (
     <div className="px-5 py-20 sm:px-8">
       <div className="mx-auto max-w-2xl text-center">
@@ -17,7 +21,8 @@ export default function JournalPage() {
       </div>
 
       <div className="mx-auto mt-14 max-w-6xl">
-        <JournalGrid />
+        <AddJournalPostForm />
+        <JournalGrid posts={posts} />
       </div>
     </div>
   );

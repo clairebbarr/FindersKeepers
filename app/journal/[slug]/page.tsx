@@ -2,11 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
-import { journalPosts, getJournalPost } from "@/content/journal-posts";
-
-export function generateStaticParams() {
-  return journalPosts.map((p) => ({ slug: p.slug }));
-}
+import { getAllJournalPosts } from "@/lib/journal/get";
 
 export async function generateMetadata({
   params,
@@ -14,7 +10,8 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = getJournalPost(slug);
+  const posts = await getAllJournalPosts();
+  const post = posts.find((p) => p.slug === slug);
   if (!post) return {};
   return { title: post.title, description: post.excerpt };
 }
@@ -25,7 +22,8 @@ export default async function JournalPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = getJournalPost(slug);
+  const posts = await getAllJournalPosts();
+  const post = posts.find((p) => p.slug === slug);
   if (!post) notFound();
 
   return (

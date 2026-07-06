@@ -1,7 +1,10 @@
 import { LinkButton } from "@/components/ui/Button";
 import { JournalGrid } from "@/components/sections/JournalGrid";
+import { getAllJournalPosts } from "@/lib/journal/get";
 
-export function LatestDiscoveries() {
+export async function LatestDiscoveries() {
+  const posts = await getAllJournalPosts();
+
   return (
     <section className="px-5 py-20 sm:px-8">
       <div className="mx-auto max-w-6xl">
@@ -13,7 +16,7 @@ export function LatestDiscoveries() {
         </div>
 
         <div className="mt-12">
-          <JournalGrid limit={3} />
+          <JournalGrid posts={posts} limit={3} />
         </div>
 
         <div className="mt-10 text-center">

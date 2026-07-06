@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { Card, Badge } from "@/components/ui/Card";
-import { journalPosts } from "@/content/journal-posts";
+import { journalPosts as staticPosts, type JournalPost } from "@/content/journal-posts";
 
-export function JournalGrid({ limit }: { limit?: number }) {
-  const posts = limit ? journalPosts.slice(0, limit) : journalPosts;
+export function JournalGrid({ posts, limit }: { posts?: JournalPost[]; limit?: number }) {
+  const list = posts ?? staticPosts;
+  const shown = limit ? list.slice(0, limit) : list;
 
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {posts.map((post) => (
+      {shown.map((post) => (
         <Link key={post.slug} href={`/journal/${post.slug}`} className="block">
           <Card className="flex h-full flex-col gap-3">
             <Badge>{post.category}</Badge>

@@ -3,16 +3,33 @@
 import { useActionState } from "react";
 import { Input, Label } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { ColorEditableSection } from "@/components/admin/ColorEditableSection";
 import { home } from "@/content/site-copy";
 import { subscribeToNewsletter, type NewsletterState } from "@/lib/newsletter/actions";
 
 const initialState: NewsletterState = { status: "idle" };
 
-export function NewsletterDrawer() {
+export function NewsletterDrawer({
+  contentMap = {},
+  colorOverrides = {},
+}: {
+  contentMap?: Record<string, string>;
+  colorOverrides?: Record<string, string>;
+}) {
   const [state, formAction, pending] = useActionState(subscribeToNewsletter, initialState);
+  const blockOverride = contentMap["newsletter.bgColor"] ?? null;
+  const effectiveHex = blockOverride ?? colorOverrides["paper"] ?? "#ece7d6";
 
   return (
-    <section className="bg-fk-paper px-5 py-20 sm:px-8">
+    <ColorEditableSection
+      className="bg-fk-paper px-5 py-20 sm:px-8"
+      tokenKey="paper"
+      page="home"
+      section="newsletter"
+      field="bgColor"
+      effectiveHex={effectiveHex}
+      blockOverrideHex={blockOverride}
+    >
       <div className="mx-auto max-w-xl text-center">
         <p className="font-body text-xs uppercase tracking-[0.3em] text-fk-rust">Little discoveries</p>
         <h2 className="mt-3 font-display text-4xl font-semibold uppercase tracking-tight text-fk-plum sm:text-5xl">
@@ -39,6 +56,6 @@ export function NewsletterDrawer() {
           <p className="mt-3 font-body text-sm text-fk-rust">{state.message}</p>
         ) : null}
       </div>
-    </section>
+    </ColorEditableSection>
   );
 }

@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { editions } from "@/content/editions";
-import { journalPosts } from "@/content/journal-posts";
+import { getAllJournalPosts } from "@/lib/journal/get";
 
 const baseUrl = "https://finderskeepersletters.com";
 
@@ -22,7 +22,7 @@ const staticRoutes = [
   "/accessibility",
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries = staticRoutes.map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
@@ -33,6 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(),
   }));
 
+  const journalPosts = await getAllJournalPosts();
   const journalEntries = journalPosts.map((p) => ({
     url: `${baseUrl}/journal/${p.slug}`,
     lastModified: new Date(p.date),

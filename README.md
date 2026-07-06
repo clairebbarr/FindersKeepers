@@ -36,7 +36,13 @@ A curated, seasonal physical-mail club. "We do the finding. You do the keeping."
 - **Full admin dashboard** at `/admin` (admin/owner only, redirects everyone
   else): overview stats, `/admin/messages` (contact submissions, mark
   handled), `/admin/subscribers` (newsletter list), `/admin/colours` (brand
-  colour tokens).
+  colour tokens, with generic labels — Background/Paper/Ink/Primary/Secondary
+  keep their meaning, the rest are Accent 1/2/3 so they read as freely
+  adjustable).
+- **Journal posts**: admins get an "+ Add Journal Post" button on `/journal`
+  in edit mode. New posts are saved to a real `journal_posts` table with the
+  date and author set automatically (today's date, the admin's own name) —
+  merged with the static starter posts, newest first.
 
 **Still placeholders, not wired yet:**
 - Payments / subscriptions (Pricing page links to Contact, not real checkout) — Stage 3
@@ -82,7 +88,9 @@ Dashboard → Project Settings → Database, not the direct `db.<ref>.supabase.c
 host — that one is IPv6-only and won't work from most local networks/CI.
 
 Key tables: `profiles` (role: customer/editor/admin/owner), `site_content`
-(the CMS text store), `media_assets` (uploaded image URLs), `newsletter_subscribers`.
+(the CMS text store, also used for per-block colour overrides), `site_colors`
+(global brand colour tokens), `media_assets` (uploaded image URLs),
+`newsletter_subscribers`, `contact_messages`, `journal_posts`.
 All have RLS enabled — public read where the site needs it, admin-only write,
 enforced by an `is_admin()` helper + a role-escalation-prevention trigger on
 `profiles`.
@@ -106,6 +114,18 @@ enforced by an `is_admin()` helper + a role-escalation-prevention trigger on
 This step needs your own Vercel account login (browser OAuth), which can't be
 done from an automated session — do this part yourself, then hand off any
 build errors.
+
+### "This page couldn't load / A server error occurred" on login or signup
+
+This means a Server Action crashed. By far the most common cause: the 3
+Supabase environment variables above aren't set on Vercel, or they were added
+*after* the last deploy — Vercel doesn't retroactively inject new env vars
+into an already-built deployment, you need to trigger a fresh deploy after
+adding/changing them (Deployments → ⋯ → Redeploy). Auth code now fails with a
+clear on-page message instead of a blank crash if this is the cause, which
+should make it obvious. If it still happens, check Vercel → your project →
+Deployments → the failing deployment → Functions/Logs for the actual server
+error — that's something only someone with dashboard access can see.
 
 ## Design tokens
 
@@ -136,7 +156,12 @@ lib/site-content/       Read (get.ts), text/image writes (actions.ts), colour to
 lib/newsletter/         Newsletter signup server action
 lib/contact/            Contact form + mark-handled server actions
 lib/email/              Resend wrapper (resend.ts) + branded HTML templates (templates.ts)
-lib/supabase/           Browser/server/middleware Supabase clients
+lib/journal/            Merge static + DB journal posts (get.ts), create-post action (actions.ts)
+lib/supabase/           Browser/server/middleware Supabase clients, errors.ts (Next.js
+                         dynamic-rendering signal helper — see comments, don't remove)
 supabase/migrations/    SQL schema, applied via scripts/db-migrate.mjs
-proxy.ts                Session-refresh middleware (Next.js 16 "proxy" convention)
+middleware.ts           Session-refresh middleware. Deliberately using the classic
+                         "middleware.ts" name rather than Next 16's newer "proxy.ts" —
+                         safer bet for Vercel production compatibility on a brand-new
+                         Next.js version, at the cost of one harmless dev-time warning.
 ```

@@ -1,13 +1,31 @@
 import { LinkButton } from "@/components/ui/Button";
 import { Star8, Key, PressedFlower, Envelope, WaxSeal } from "@/components/brand/icons";
+import { ColorEditableSection } from "@/components/admin/ColorEditableSection";
 import { whatArrivesCategories } from "@/content/site-copy";
 
 const icons = [Star8, Key, PressedFlower, Envelope, WaxSeal];
 const tilts = ["-2deg", "1.5deg", "-1deg", "2deg", "-1.5deg"];
 
-export function WhatArrivesPreview() {
+export function WhatArrivesPreview({
+  contentMap = {},
+  colorOverrides = {},
+}: {
+  contentMap?: Record<string, string>;
+  colorOverrides?: Record<string, string>;
+}) {
+  const blockOverride = contentMap["what-arrives-preview.bgColor"] ?? null;
+  const effectiveHex = blockOverride ?? colorOverrides["paper"] ?? "#ece7d6";
+
   return (
-    <section className="bg-fk-paper px-5 py-20 sm:px-8">
+    <ColorEditableSection
+      className="bg-fk-paper px-5 py-20 sm:px-8"
+      tokenKey="paper"
+      page="home"
+      section="what-arrives-preview"
+      field="bgColor"
+      effectiveHex={effectiveHex}
+      blockOverrideHex={blockOverride}
+    >
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-2xl text-center">
           <p className="font-body text-xs uppercase tracking-[0.3em] text-fk-rust">Inside every envelope</p>
@@ -42,6 +60,6 @@ export function WhatArrivesPreview() {
           <LinkButton href="/what-arrives">See what arrives in full</LinkButton>
         </div>
       </div>
-    </section>
+    </ColorEditableSection>
   );
 }

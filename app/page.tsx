@@ -26,14 +26,14 @@ export default async function Home() {
     <>
       <Hero contentMap={contentMap} colorOverrides={colorOverrides} />
       <PromiseSection contentMap={contentMap} />
-      <WhatArrivesPreview />
+      <WhatArrivesPreview contentMap={contentMap} colorOverrides={colorOverrides} />
       <CurrentEditionSection mediaMap={mediaMap} />
       <AllEditionsStrip mediaMap={mediaMap} />
-      <OurWhyTeaser />
+      <OurWhyTeaser contentMap={contentMap} colorOverrides={colorOverrides} />
       <MeetKeepersTeaser mediaMap={mediaMap} contentMap={contentMap} colorOverrides={colorOverrides} />
       <LostLettersTeaser contentMap={contentMap} colorOverrides={colorOverrides} />
       <LatestDiscoveries />
-      <NewsletterDrawer />
+      <NewsletterDrawer contentMap={contentMap} colorOverrides={colorOverrides} />
     </>
   );
 }
