@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Star4 } from "@/components/brand/icons";
 import { EditableImage } from "@/components/admin/EditableImage";
 import { EditableText } from "@/components/admin/EditableText";
+import { EditableRotation } from "@/components/admin/EditableRotation";
 import { founders, keepersShared } from "@/content/founders";
 import { getSiteContentMap, getMediaMap } from "@/lib/site-content/get";
 
@@ -30,10 +31,13 @@ export default async function KeepersPage() {
 
       <div className="mx-auto mt-14 grid max-w-5xl gap-8 sm:grid-cols-3">
         {founders.map((f, i) => (
-          <div
+          <EditableRotation
             key={f.slug}
-            className="relative border-2 border-fk-plum bg-fk-paper p-8 text-center shadow-[6px_6px_0_0_var(--color-fk-plum)]"
-            style={{ transform: `rotate(${i === 1 ? 0 : i === 0 ? -1 : 1}deg)` }}
+            page="keepers"
+            section={f.slug}
+            field="rotation"
+            initialDeg={Number(contentMap[`${f.slug}.rotation`] ?? (i === 1 ? 0 : i === 0 ? -1 : 1))}
+            className="border-2 border-fk-plum bg-fk-paper p-8 text-center shadow-[6px_6px_0_0_var(--color-fk-plum)]"
           >
             <EditableImage
               mediaKey={`founder-${f.slug}`}
@@ -57,7 +61,7 @@ export default async function KeepersPage() {
               className="mt-4 border-t border-fk-plum/20 pt-4 font-body text-sm text-fk-ink/80"
               initialValue={contentMap[`${f.slug}.bio`] ?? f.bio}
             />
-          </div>
+          </EditableRotation>
         ))}
       </div>
 

@@ -1,21 +1,22 @@
 import { Wordmark } from "@/components/brand/Wordmark";
-import {
-  Star8,
-  Key,
-  Shell,
-  Moth,
-  PressedFlower,
-  Bow,
-  Teacup,
-  Book,
-  Envelope,
-} from "@/components/brand/icons";
 import { LinkButton } from "@/components/ui/Button";
 import { EditableText } from "@/components/admin/EditableText";
+import { EditableIcon } from "@/components/admin/EditableIcon";
 import { ColorEditableSection } from "@/components/admin/ColorEditableSection";
 import { home } from "@/content/site-copy";
+import type { IconKey } from "@/lib/site-content/icon-registry";
 
-const specimens = [Star8, Key, Shell, Moth, PressedFlower, Bow, Teacup, Book, Envelope];
+const specimens: IconKey[] = [
+  "star8",
+  "key",
+  "shell",
+  "moth",
+  "pressedflower",
+  "bow",
+  "teacup",
+  "book",
+  "envelope",
+];
 
 export function Hero({
   contentMap = {},
@@ -77,12 +78,18 @@ export function Hero({
             A collection of small things
           </p>
           <div className="grid grid-cols-3 overflow-hidden rounded-sm border-2 border-fk-mint/60">
-            {specimens.map((Icon, i) => (
+            {specimens.map((defaultKey, i) => (
               <div
                 key={i}
                 className="flex aspect-square items-center justify-center border border-fk-mint/25 p-4"
               >
-                <Icon className="h-8 w-8 text-fk-mint sm:h-9 sm:w-9" />
+                <EditableIcon
+                  page="home"
+                  section={`hero-specimen-${i}`}
+                  field="icon"
+                  initialIconKey={contentMap[`hero-specimen-${i}.icon`] ?? defaultKey}
+                  iconClassName="h-8 w-8 text-fk-mint sm:h-9 sm:w-9"
+                />
               </div>
             ))}
           </div>

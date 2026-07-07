@@ -51,6 +51,16 @@ A curated, seasonal physical-mail club. "We do the finding. You do the keeping."
 - **Address management**: signed-in customers can save/replace/remove a
   delivery address on `/account` — a real `addresses` table, RLS-scoped to
   the owner (admins can read all). Verified end-to-end.
+- **Icon and rotation editing**: admins can also change which icon renders
+  (Hero's 3×3 specimen grid, What Arrives category cards) and nudge a card's
+  tilt (What Arrives cards, Keepers founder cards) directly in place — the
+  element's position in the grid/layout never moves, only the icon glyph or
+  rotation angle. Same click-to-edit language as text/images/colour:
+  `EditableIcon` (pencil badge → icon-library popover) and `EditableRotation`
+  (↺/↻ nudge control, debounced save). See `lib/site-content/icon-registry.ts`
+  for the icon library and `components/admin/EditableIcon.tsx` /
+  `EditableRotation.tsx` — reuse the same pattern for any other
+  icon-bearing or rotated element sitewide.
 - **Email chain visibility**: every email this app sends (contact
   autoresponder, signup welcome email, all admin notifications) automatically
   CC's all 3 admins, except emails already addressed directly to the admins
