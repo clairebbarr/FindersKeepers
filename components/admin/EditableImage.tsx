@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import { useEditMode } from "./EditModeContext";
 import { createClient } from "@/lib/supabase/client";
 
@@ -21,6 +22,7 @@ export function EditableImage({
   const [url, setUrl] = useState(initialUrl);
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -41,6 +43,9 @@ export function EditableImage({
         { onConflict: "key" }
       );
       setUrl(pub.publicUrl);
+      // Drop the client Router Cache for this route so navigating away and
+      // back doesn't briefly show the old image.
+      router.refresh();
     } finally {
       setUploading(false);
     }

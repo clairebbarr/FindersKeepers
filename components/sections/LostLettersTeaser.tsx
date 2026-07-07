@@ -1,6 +1,7 @@
 import { Envelope, Star8 } from "@/components/brand/icons";
 import { LinkButton } from "@/components/ui/Button";
 import { ColorEditableSection } from "@/components/admin/ColorEditableSection";
+import { EditableText } from "@/components/admin/EditableText";
 import { lostLetters } from "@/content/site-copy";
 
 export function LostLettersTeaser({
@@ -29,10 +30,22 @@ export function LostLettersTeaser({
           <Envelope className="h-7 w-7 text-fk-mint" />
         </span>
         <p className="mt-5 font-body text-xs uppercase tracking-[0.3em] text-fk-mint/70">The marketing plan</p>
-        <h2 className="mt-3 font-display text-4xl font-semibold uppercase tracking-tight sm:text-5xl">
-          {lostLetters.heading}
-        </h2>
-        <p className="mt-5 font-body text-lg text-fk-mint/85">{lostLetters.intro}</p>
+        <EditableText
+          page="home"
+          section="lost-letters-teaser"
+          field="heading"
+          as="h2"
+          className="mt-3 font-display text-4xl font-semibold uppercase tracking-tight sm:text-5xl"
+          initialValue={contentMap["lost-letters-teaser.heading"] ?? lostLetters.heading}
+        />
+        <EditableText
+          page="home"
+          section="lost-letters-teaser"
+          field="intro"
+          as="p"
+          className="mt-5 font-body text-lg text-fk-mint/85"
+          initialValue={contentMap["lost-letters-teaser.intro"] ?? lostLetters.intro}
+        />
         <p className="mt-4 font-display text-xl italic text-fk-mint/70">
           &ldquo;You found me, you keep me. If you&rsquo;re curious… scan me.&rdquo;
         </p>

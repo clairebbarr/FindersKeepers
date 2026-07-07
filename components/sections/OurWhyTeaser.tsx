@@ -1,6 +1,7 @@
 import { LinkButton } from "@/components/ui/Button";
 import { Star4 } from "@/components/brand/icons";
 import { ColorEditableSection } from "@/components/admin/ColorEditableSection";
+import { EditableText } from "@/components/admin/EditableText";
 import { ourWhy, brand } from "@/content/site-copy";
 
 export function OurWhyTeaser({
@@ -25,11 +26,30 @@ export function OurWhyTeaser({
     >
       <div className="mx-auto max-w-2xl text-center">
         <Star4 className="mx-auto h-8 w-8 text-fk-plum" />
-        <h2 className="mt-4 font-display text-4xl font-semibold uppercase tracking-tight sm:text-5xl">
-          {ourWhy.heading}
-        </h2>
-        <p className="mt-6 font-body text-lg leading-relaxed text-fk-plum/85">{ourWhy.paragraphs[0]}</p>
-        <p className="mt-6 font-display text-2xl italic">{ourWhy.paragraphs[1]}</p>
+        <EditableText
+          page="home"
+          section="why-teaser"
+          field="heading"
+          as="h2"
+          className="mt-4 font-display text-4xl font-semibold uppercase tracking-tight sm:text-5xl"
+          initialValue={contentMap["why-teaser.heading"] ?? ourWhy.heading}
+        />
+        <EditableText
+          page="home"
+          section="why-teaser"
+          field="paragraph1"
+          as="p"
+          className="mt-6 font-body text-lg leading-relaxed text-fk-plum/85"
+          initialValue={contentMap["why-teaser.paragraph1"] ?? ourWhy.paragraphs[0]}
+        />
+        <EditableText
+          page="home"
+          section="why-teaser"
+          field="paragraph2"
+          as="p"
+          className="mt-6 font-display text-2xl italic"
+          initialValue={contentMap["why-teaser.paragraph2"] ?? ourWhy.paragraphs[1]}
+        />
         <p className="mt-6 font-body text-sm uppercase tracking-[0.2em] text-fk-rust">{brand.tagline}</p>
         <LinkButton
           href="/about"

@@ -7,6 +7,7 @@ export type Profile = {
   full_name: string | null;
   avatar_url: string | null;
   role: "customer" | "editor" | "admin" | "owner";
+  subscribed: boolean;
 };
 
 /** Current logged-in user's profile, or null if signed out / not configured.
@@ -24,7 +25,7 @@ export async function getCurrentProfile(): Promise<Profile | null> {
 
     const { data: profile } = await supabase
       .from("profiles")
-      .select("id, email, full_name, avatar_url, role")
+      .select("id, email, full_name, avatar_url, role, subscribed")
       .eq("id", user.id)
       .single();
 

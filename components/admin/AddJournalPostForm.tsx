@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useEditMode } from "./EditModeContext";
 import { createJournalPost, type JournalPostState } from "@/lib/journal/actions";
 import { Label, Input } from "@/components/ui/Input";
@@ -20,6 +21,13 @@ export function AddJournalPostForm() {
   const { isAdmin, editMode } = useEditMode();
   const [open, setOpen] = useState(false);
   const [state, formAction, pending] = useActionState(createJournalPost, initialState);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (state.status === "success") {
+      router.refresh();
+    }
+  }, [state.status, router]);
 
   if (!isAdmin || !editMode) return null;
 
@@ -79,7 +87,7 @@ export function AddJournalPostForm() {
         </p>
         {state.status === "error" ? <p className="font-body text-sm text-fk-rust">{state.message}</p> : null}
         {state.status === "success" ? (
-          <p className="font-body text-sm text-fk-plum">Post published — refresh to see it in the list.</p>
+          <p className="font-body text-sm text-fk-plum">Post published!</p>
         ) : null}
         <div className="flex gap-3">
           <Button type="submit" disabled={pending}>

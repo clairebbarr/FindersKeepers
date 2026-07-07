@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { Input, Label } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { ColorEditableSection } from "@/components/admin/ColorEditableSection";
+import { EditableText } from "@/components/admin/EditableText";
 import { home } from "@/content/site-copy";
 import { subscribeToNewsletter, type NewsletterState } from "@/lib/newsletter/actions";
 
@@ -32,10 +33,22 @@ export function NewsletterDrawer({
     >
       <div className="mx-auto max-w-xl text-center">
         <p className="font-body text-xs uppercase tracking-[0.3em] text-fk-rust">Little discoveries</p>
-        <h2 className="mt-3 font-display text-4xl font-semibold uppercase tracking-tight text-fk-plum sm:text-5xl">
-          {home.newsletterHeading}
-        </h2>
-        <p className="mt-3 font-body text-fk-ink/75">{home.newsletterBody}</p>
+        <EditableText
+          page="home"
+          section="newsletter"
+          field="heading"
+          as="h2"
+          className="mt-3 font-display text-4xl font-semibold uppercase tracking-tight text-fk-plum sm:text-5xl"
+          initialValue={contentMap["newsletter.heading"] ?? home.newsletterHeading}
+        />
+        <EditableText
+          page="home"
+          section="newsletter"
+          field="body"
+          as="p"
+          className="mt-3 font-body text-fk-ink/75"
+          initialValue={contentMap["newsletter.body"] ?? home.newsletterBody}
+        />
 
         {state.status === "success" ? (
           <p className="mt-8 border border-fk-mint bg-fk-mint/20 px-6 py-4 font-body text-fk-plum">

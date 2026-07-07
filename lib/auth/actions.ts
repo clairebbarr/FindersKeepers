@@ -3,8 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { notifyAdmins } from "@/lib/email/resend";
-import { newSignupAdminNotificationEmail } from "@/lib/email/templates";
+import { notifyAdmins, sendEmail, SITE_URL } from "@/lib/email/resend";
+import { newSignupAdminNotificationEmail, welcomeEmail } from "@/lib/email/templates";
 
 export type AuthActionState = { error: string | null };
 
@@ -62,6 +62,11 @@ export async function signup(_prevState: AuthActionState, formData: FormData): P
       `New signup: ${fullName || email}`,
       newSignupAdminNotificationEmail({ name: fullName, email })
     );
+    await sendEmail({
+      to: email,
+      subject: "Welcome to Finders, Keepers",
+      html: welcomeEmail({ name: fullName, siteUrl: SITE_URL }),
+    });
   } catch (err) {
     // Email is best-effort — never block signup on a notification failure.
     console.error("[email] signup notification failed:", err);

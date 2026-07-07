@@ -7,6 +7,7 @@ export const metadata: Metadata = { title: "Admin Dashboard", robots: { index: f
 
 const adminNav = [
   { label: "Overview", href: "/admin" },
+  { label: "Users", href: "/admin/users" },
   { label: "Messages", href: "/admin/messages" },
   { label: "Subscribers", href: "/admin/subscribers" },
   { label: "Colours", href: "/admin/colours" },

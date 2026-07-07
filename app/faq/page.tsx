@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
+import { EditableText } from "@/components/admin/EditableText";
 import { generalFaq, pricingFaq } from "@/content/faq";
+import { getSiteContentMap } from "@/lib/site-content/get";
 
 export const metadata: Metadata = {
   title: "FAQ",
   description: "Answers to common questions about Finders, Keepers.",
 };
 
-export default function FaqPage() {
+export default async function FaqPage() {
+  const contentMap = await getSiteContentMap("faq");
+
   return (
     <div className="px-5 py-20 sm:px-8">
       <div className="mx-auto max-w-2xl text-center">
@@ -19,10 +23,24 @@ export default function FaqPage() {
         <div>
           <h2 className="font-display text-2xl font-semibold text-fk-plum">General</h2>
           <div className="mt-4 space-y-6">
-            {generalFaq.map((item) => (
+            {generalFaq.map((item, i) => (
               <div key={item.question} className="border-b border-fk-ink/10 pb-4">
-                <h3 className="font-display text-lg font-semibold text-fk-ink">{item.question}</h3>
-                <p className="mt-1 font-body text-sm text-fk-ink/75">{item.answer}</p>
+                <EditableText
+                  page="faq"
+                  section={`general-${i}`}
+                  field="question"
+                  as="h3"
+                  className="font-display text-lg font-semibold text-fk-ink"
+                  initialValue={contentMap[`general-${i}.question`] ?? item.question}
+                />
+                <EditableText
+                  page="faq"
+                  section={`general-${i}`}
+                  field="answer"
+                  as="p"
+                  className="mt-1 font-body text-sm text-fk-ink/75"
+                  initialValue={contentMap[`general-${i}.answer`] ?? item.answer}
+                />
               </div>
             ))}
           </div>
@@ -31,10 +49,24 @@ export default function FaqPage() {
         <div>
           <h2 className="font-display text-2xl font-semibold text-fk-plum">Subscriptions and Pricing</h2>
           <div className="mt-4 space-y-6">
-            {pricingFaq.map((item) => (
+            {pricingFaq.map((item, i) => (
               <div key={item.question} className="border-b border-fk-ink/10 pb-4">
-                <h3 className="font-display text-lg font-semibold text-fk-ink">{item.question}</h3>
-                <p className="mt-1 font-body text-sm text-fk-ink/75">{item.answer}</p>
+                <EditableText
+                  page="faq"
+                  section={`pricing-${i}`}
+                  field="question"
+                  as="h3"
+                  className="font-display text-lg font-semibold text-fk-ink"
+                  initialValue={contentMap[`pricing-${i}.question`] ?? item.question}
+                />
+                <EditableText
+                  page="faq"
+                  section={`pricing-${i}`}
+                  field="answer"
+                  as="p"
+                  className="mt-1 font-body text-sm text-fk-ink/75"
+                  initialValue={contentMap[`pricing-${i}.answer`] ?? item.answer}
+                />
               </div>
             ))}
           </div>

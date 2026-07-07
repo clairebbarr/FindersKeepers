@@ -1,6 +1,7 @@
 import { LinkButton } from "@/components/ui/Button";
 import { Star8, Key, PressedFlower, Envelope, WaxSeal } from "@/components/brand/icons";
 import { ColorEditableSection } from "@/components/admin/ColorEditableSection";
+import { EditableText } from "@/components/admin/EditableText";
 import { whatArrivesCategories } from "@/content/site-copy";
 
 const icons = [Star8, Key, PressedFlower, Envelope, WaxSeal];
@@ -28,13 +29,32 @@ export function WhatArrivesPreview({
     >
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="font-body text-xs uppercase tracking-[0.3em] text-fk-rust">Inside every envelope</p>
-          <h2 className="mt-3 font-display text-4xl font-semibold uppercase tracking-tight text-fk-plum sm:text-5xl">
-            What Arrives
-          </h2>
-          <p className="mt-3 font-body text-fk-ink/75">
-            Not every envelope contains the same things. That is the point.
-          </p>
+          <EditableText
+            page="home"
+            section="what-arrives-preview"
+            field="eyebrow"
+            as="p"
+            className="font-body text-xs uppercase tracking-[0.3em] text-fk-rust"
+            initialValue={contentMap["what-arrives-preview.eyebrow"] ?? "Inside every envelope"}
+          />
+          <EditableText
+            page="home"
+            section="what-arrives-preview"
+            field="heading"
+            as="h2"
+            className="mt-3 font-display text-4xl font-semibold uppercase tracking-tight text-fk-plum sm:text-5xl"
+            initialValue={contentMap["what-arrives-preview.heading"] ?? "What Arrives"}
+          />
+          <EditableText
+            page="home"
+            section="what-arrives-preview"
+            field="subheading"
+            as="p"
+            className="mt-3 font-body text-fk-ink/75"
+            initialValue={
+              contentMap["what-arrives-preview.subheading"] ?? "Not every envelope contains the same things. That is the point."
+            }
+          />
         </div>
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">

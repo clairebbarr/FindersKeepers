@@ -47,3 +47,23 @@ export function newSignupAdminNotificationEmail({ name, email }: { name: string;
     <p style="font-size:14px;"><strong>${escapeHtml(name || "(no name given)")}</strong> — ${escapeHtml(email)}</p>
   `);
 }
+
+export function welcomeEmail({ name, siteUrl }: { name: string; siteUrl: string }) {
+  const safeName = escapeHtml(name || "there");
+  return wrapper(`
+    <h1 style="font-size:22px;margin:0 0 16px;color:#4a214b;">Welcome, ${safeName}.</h1>
+    <p style="font-size:15px;line-height:1.6;">Your account is set up. We do the finding, you do the keeping — and now you've got a place to come back to for editions, the Journal, and (soon) your own Lost Letters.</p>
+    <p style="font-size:15px;line-height:1.6;">Real dispatch dates and checkout aren't open just yet, but you can join the waitlist now and be first to know when they are.</p>
+    <p style="margin-top:24px;">
+      <a href="${siteUrl}/pricing" style="display:inline-block;background:#4a214b;color:#f7f5ef;padding:12px 24px;text-decoration:none;font-size:14px;font-weight:600;">Join the waitlist</a>
+    </p>
+  `);
+}
+
+export function newSubscriberAdminNotificationEmail({ name, email, plan }: { name: string; email: string; plan: string }) {
+  return wrapper(`
+    <h1 style="font-size:20px;margin:0 0 16px;color:#4a214b;">New subscriber</h1>
+    <p style="font-size:14px;"><strong>${escapeHtml(name || "(no name given)")}</strong> — ${escapeHtml(email)}</p>
+    <p style="font-size:14px;">Plan: ${escapeHtml(plan)}</p>
+  `);
+}

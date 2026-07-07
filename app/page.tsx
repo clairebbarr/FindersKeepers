@@ -28,11 +28,11 @@ export default async function Home() {
       <PromiseSection contentMap={contentMap} />
       <WhatArrivesPreview contentMap={contentMap} colorOverrides={colorOverrides} />
       <CurrentEditionSection mediaMap={mediaMap} />
-      <AllEditionsStrip mediaMap={mediaMap} />
+      <AllEditionsStrip mediaMap={mediaMap} contentMap={contentMap} />
       <OurWhyTeaser contentMap={contentMap} colorOverrides={colorOverrides} />
       <MeetKeepersTeaser mediaMap={mediaMap} contentMap={contentMap} colorOverrides={colorOverrides} />
       <LostLettersTeaser contentMap={contentMap} colorOverrides={colorOverrides} />
-      <LatestDiscoveries />
+      <LatestDiscoveries contentMap={contentMap} />
       <NewsletterDrawer contentMap={contentMap} colorOverrides={colorOverrides} />
     </>
   );

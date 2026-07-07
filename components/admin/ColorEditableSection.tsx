@@ -1,6 +1,7 @@
 "use client";
 
 import { createElement, useState, useTransition, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import { useEditMode } from "./EditModeContext";
 import { updateGlobalColor, updateBlockColor } from "@/lib/site-content/color-actions";
 import type { BrandColorTokenKey } from "@/lib/site-content/color-tokens";
@@ -37,6 +38,7 @@ export function ColorEditableSection({
   const [open, setOpen] = useState(false);
   const [hex, setHex] = useState(effectiveHex);
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const style = blockOverrideHex ? { backgroundColor: blockOverrideHex } : undefined;
 
@@ -47,6 +49,11 @@ export function ColorEditableSection({
   function applyBlock() {
     startTransition(async () => {
       await updateBlockColor(page, section, field, hex);
+      // updateGlobalColor already revalidates the whole layout; a per-block
+      // change only revalidates its own page server-side, but without this
+      // the client Router Cache can still show the old colour on this page
+      // until a hard refresh.
+      router.refresh();
       setOpen(false);
     });
   }
@@ -54,6 +61,7 @@ export function ColorEditableSection({
   function applyGlobal() {
     startTransition(async () => {
       await updateGlobalColor(tokenKey, hex);
+      router.refresh();
       setOpen(false);
     });
   }

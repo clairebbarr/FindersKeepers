@@ -5,12 +5,16 @@ import { journalPosts } from "@/content/journal-posts";
 
 async function getCounts() {
   const supabase = await createClient();
-  const [subscribers, messages, unhandled] = await Promise.all([
+  const [users, subscribed, subscribers, messages, unhandled] = await Promise.all([
+    supabase.from("profiles").select("id", { count: "exact", head: true }),
+    supabase.from("profiles").select("id", { count: "exact", head: true }).eq("subscribed", true),
     supabase.from("newsletter_subscribers").select("id", { count: "exact", head: true }),
     supabase.from("contact_messages").select("id", { count: "exact", head: true }),
     supabase.from("contact_messages").select("id", { count: "exact", head: true }).eq("handled", false),
   ]);
   return {
+    users: users.count ?? 0,
+    subscribed: subscribed.count ?? 0,
     subscribers: subscribers.count ?? 0,
     messages: messages.count ?? 0,
     unhandled: unhandled.count ?? 0,
@@ -21,6 +25,12 @@ export default async function AdminOverviewPage() {
   const counts = await getCounts();
 
   const cards = [
+    {
+      label: "Users",
+      value: counts.users,
+      sub: `${counts.subscribed} subscribed`,
+      href: "/admin/users",
+    },
     { label: "Newsletter subscribers", value: counts.subscribers, href: "/admin/subscribers" },
     {
       label: "Contact messages",
@@ -34,7 +44,7 @@ export default async function AdminOverviewPage() {
 
   return (
     <div>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
         {cards.map((card) => (
           <Link
             key={card.label}
