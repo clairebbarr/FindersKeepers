@@ -33,6 +33,10 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 !.env.example
+# Public Supabase values live here so the deployed build never depends on the
+# Vercel dashboard. Safe: publishable/anon key is designed to be public (RLS
+# protects data). The SECRET key is NOT in this file — it stays in Vercel only.
+!.env.production
 
 # vercel
 .vercel
