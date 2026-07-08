@@ -15,24 +15,17 @@ export async function login(_prevState: AuthActionState, formData: FormData): Pr
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
 
-  // TEMPORARY DIAGNOSTIC — surfaces the real cause instead of the vague
-  // "couldn't connect" message. Remove once the deployment is fixed.
-  const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const rawKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  const diag = `URL:${rawUrl ? rawUrl.replace("https://", "").slice(0, 22) : "MISSING"} | KEY:${
-    rawKey ? `present(${rawKey.slice(0, 6)}…len${rawKey.length})` : "MISSING"
-  }`;
-
   let authError: string | null = null;
   try {
     const supabase = await createClient();
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) authError = error.message;
   } catch (err) {
-    return { error: `[DIAG] ${diag} | threw: ${err instanceof Error ? err.message : String(err)}` };
+    console.error("[auth] login failed:", err);
+    return { error: CONNECTION_ERROR };
   }
 
-  if (authError) return { error: `[DIAG] ${diag} | auth: ${authError}` };
+  if (authError) return { error: authError };
 
   revalidatePath("/", "layout");
   redirect("/account");
