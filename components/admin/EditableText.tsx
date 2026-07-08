@@ -20,14 +20,33 @@ export function EditableText({
   as?: string;
   className?: string;
 }) {
-  const { isAdmin, editMode } = useEditMode();
+  const { isAdmin, editMode, styleMode } = useEditMode();
   const [value, setValue] = useState(initialValue);
   const [isPending, startTransition] = useTransition();
   const [justSaved, setJustSaved] = useState(false);
   const router = useRouter();
 
+  // Stable identity for this element — used both to apply saved colour
+  // overrides (global CSS injected in the layout targets this attribute) and
+  // as the key the colour editor writes to.
+  const editKey = `${page}:${section}:${field}`;
+
+  // Public / non-editing render: still tag it so saved colours show for everyone.
   if (!isAdmin || !editMode) {
-    return createElement(as, { className }, value);
+    return createElement(as, { className, "data-fk-edit": editKey }, value);
+  }
+
+  // Colour-editing sub-mode: not text-editable; the global ElementStyleEditor
+  // catches the click via the data-fk-edit attribute.
+  if (styleMode) {
+    return createElement(
+      as,
+      {
+        className: `${className} cursor-pointer rounded-sm outline-dashed outline-2 outline-fk-dustyblue outline-offset-4`,
+        "data-fk-edit": editKey,
+      },
+      value
+    );
   }
 
   function handleBlur(e: FocusEvent<HTMLElement>) {
@@ -51,6 +70,7 @@ export function EditableText({
     as,
     {
       className: `${className} rounded-sm ${outline} outline-offset-4 ${isPending ? "opacity-50" : ""}`,
+      "data-fk-edit": editKey,
       contentEditable: true,
       suppressContentEditableWarning: true,
       onBlur: handleBlur,

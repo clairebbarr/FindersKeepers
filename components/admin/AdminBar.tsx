@@ -7,7 +7,7 @@ import { signOut } from "@/lib/auth/actions";
 import { Star4 } from "@/components/brand/icons";
 
 export function AdminBar({ name }: { name: string }) {
-  const { isAdmin, editMode, toggleEditMode } = useEditMode();
+  const { isAdmin, editMode, toggleEditMode, styleMode, toggleStyleMode } = useEditMode();
   const [open, setOpen] = useState(false);
   if (!isAdmin) return null;
 
@@ -25,6 +25,17 @@ export function AdminBar({ name }: { name: string }) {
           >
             {editMode ? "Editing — click to stop" : "Edit this site"}
           </button>
+          {editMode ? (
+            <button
+              type="button"
+              onClick={toggleStyleMode}
+              className={`mt-2 w-full rounded-full px-4 py-2 font-body text-sm font-semibold transition-colors ${
+                styleMode ? "bg-fk-dustyblue text-fk-cream" : "border border-fk-plum text-fk-plum"
+              }`}
+            >
+              {styleMode ? "Colour mode — click text to recolour" : "Edit colours"}
+            </button>
+          ) : null}
           <Link
             href="/admin"
             className="mt-3 block w-full rounded-full border border-fk-plum px-4 py-2 text-center font-body text-sm font-semibold text-fk-plum"

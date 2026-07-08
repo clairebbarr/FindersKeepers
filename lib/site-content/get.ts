@@ -36,6 +36,24 @@ export async function getMediaMap(keys: string[]): Promise<Record<string, string
   }
 }
 
+/** Per-element style overrides (see element-style-actions.ts). Returned flat so
+ *  the layout can inject them as global CSS keyed by each element's
+ *  data-fk-edit value. */
+export async function getElementStyleOverrides(): Promise<{ key: string; prop: string; value: string }[]> {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return [];
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("site_content")
+      .select("section, field, value")
+      .eq("page", "@styles");
+    return (data ?? []).map((row) => ({ key: row.section, prop: row.field, value: row.value ?? "" }));
+  } catch (err) {
+    rethrowIfDynamicServerUsage(err);
+    return [];
+  }
+}
+
 /** Global brand colour token overrides (e.g. "plum" -> "#4a214b"), keyed by
  *  the same short name used in --color-fk-<key> / bg-fk-<key> classes. */
 export async function getColorOverrides(): Promise<Record<string, string>> {
