@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Wordmark } from "@/components/brand/Wordmark";
 import { Star8 } from "@/components/brand/icons";
 import { ColorEditableSection } from "@/components/admin/ColorEditableSection";
+import { EditableText } from "@/components/admin/EditableText";
 import { brand, nav, footerLinks } from "@/content/site-copy";
 import { getSiteContentMap, getColorOverrides } from "@/lib/site-content/get";
 
@@ -28,12 +29,33 @@ export async function SiteFooter() {
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <Wordmark className="text-xl" />
-            <p className="mt-4 max-w-xs font-body text-sm text-fk-cream/75">{brand.tagline}</p>
-            <p className="mt-2 max-w-xs font-body text-sm text-fk-cream/60">{brand.secondaryLine}</p>
+            <EditableText
+              page="global"
+              section="footer"
+              field="tagline"
+              as="p"
+              className="mt-4 block max-w-xs font-body text-sm text-fk-cream/75"
+              initialValue={contentMap["footer.tagline"] ?? brand.tagline}
+            />
+            <EditableText
+              page="global"
+              section="footer"
+              field="secondary"
+              as="p"
+              className="mt-2 block max-w-xs font-body text-sm text-fk-cream/60"
+              initialValue={contentMap["footer.secondary"] ?? brand.secondaryLine}
+            />
           </div>
 
           <div>
-            <h3 className="font-body text-xs uppercase tracking-[0.25em] text-fk-cream/50">Explore</h3>
+            <EditableText
+              page="global"
+              section="footer"
+              field="explore-heading"
+              as="h3"
+              className="font-body text-xs uppercase tracking-[0.25em] text-fk-cream/50"
+              initialValue={contentMap["footer.explore-heading"] ?? "Explore"}
+            />
             <ul className="mt-4 space-y-2">
               {nav.slice(0, 6).map((item) => (
                 <li key={item.href}>
@@ -46,7 +68,14 @@ export async function SiteFooter() {
           </div>
 
           <div>
-            <h3 className="font-body text-xs uppercase tracking-[0.25em] text-fk-cream/50">Support</h3>
+            <EditableText
+              page="global"
+              section="footer"
+              field="support-heading"
+              as="h3"
+              className="font-body text-xs uppercase tracking-[0.25em] text-fk-cream/50"
+              initialValue={contentMap["footer.support-heading"] ?? "Support"}
+            />
             <ul className="mt-4 space-y-2">
               {nav.slice(6).map((item) => (
                 <li key={item.href}>
@@ -64,7 +93,14 @@ export async function SiteFooter() {
           </div>
 
           <div>
-            <h3 className="font-body text-xs uppercase tracking-[0.25em] text-fk-cream/50">Legal</h3>
+            <EditableText
+              page="global"
+              section="footer"
+              field="legal-heading"
+              as="h3"
+              className="font-body text-xs uppercase tracking-[0.25em] text-fk-cream/50"
+              initialValue={contentMap["footer.legal-heading"] ?? "Legal"}
+            />
             <ul className="mt-4 space-y-2">
               {footerLinks.legal.map((item) => (
                 <li key={item.href}>

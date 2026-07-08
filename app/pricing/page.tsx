@@ -34,15 +34,49 @@ export default async function PricingPage() {
       <div className="mx-auto mt-14 grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {pricingPlans.map((plan) => (
           <Card key={plan.slug} className="flex flex-col">
-            <h2 className="font-display text-xl font-semibold text-fk-plum">{plan.name}</h2>
-            <p className="mt-2 font-display text-3xl font-semibold text-fk-ink">{plan.price}</p>
-            <p className="font-body text-xs uppercase tracking-[0.15em] text-fk-ink/50">{plan.interval}</p>
-            <p className="mt-4 font-body text-sm text-fk-ink/75">{plan.description}</p>
+            <EditableText
+              page="pricing"
+              section={`plan-${plan.slug}`}
+              field="name"
+              as="h2"
+              className="font-display text-xl font-semibold text-fk-plum"
+              initialValue={contentMap[`plan-${plan.slug}.name`] ?? plan.name}
+            />
+            <EditableText
+              page="pricing"
+              section={`plan-${plan.slug}`}
+              field="price"
+              as="p"
+              className="mt-2 block font-display text-3xl font-semibold text-fk-ink"
+              initialValue={contentMap[`plan-${plan.slug}.price`] ?? plan.price}
+            />
+            <EditableText
+              page="pricing"
+              section={`plan-${plan.slug}`}
+              field="interval"
+              as="p"
+              className="block font-body text-xs uppercase tracking-[0.15em] text-fk-ink/50"
+              initialValue={contentMap[`plan-${plan.slug}.interval`] ?? plan.interval}
+            />
+            <EditableText
+              page="pricing"
+              section={`plan-${plan.slug}`}
+              field="description"
+              as="p"
+              className="mt-4 block font-body text-sm text-fk-ink/75"
+              initialValue={contentMap[`plan-${plan.slug}.description`] ?? plan.description}
+            />
             <ul className="mt-4 flex-1 space-y-2">
-              {plan.perks.map((perk) => (
-                <li key={perk} className="font-body text-sm text-fk-ink/70">
-                  &bull; {perk}
-                </li>
+              {plan.perks.map((perk, j) => (
+                <EditableText
+                  key={j}
+                  page="pricing"
+                  section={`plan-${plan.slug}`}
+                  field={`perk-${j}`}
+                  as="li"
+                  className="font-body text-sm text-fk-ink/70"
+                  initialValue={contentMap[`plan-${plan.slug}.perk-${j}`] ?? `• ${perk}`}
+                />
               ))}
             </ul>
             {plan.waitlistOnly ? <Badge className="mt-4 w-fit">Waitlist</Badge> : null}
@@ -54,7 +88,14 @@ export default async function PricingPage() {
       </div>
 
       <div className="mx-auto mt-20 max-w-2xl">
-        <h2 className="text-center font-display text-2xl font-semibold text-fk-plum">Questions</h2>
+        <EditableText
+          page="pricing"
+          section="faq"
+          field="heading"
+          as="h2"
+          className="block text-center font-display text-2xl font-semibold text-fk-plum"
+          initialValue={contentMap["faq.heading"] ?? "Questions"}
+        />
         <div className="mt-8 space-y-6">
           {pricingFaq.map((item) => (
             <div key={item.question} className="border-b border-fk-ink/10 pb-4">

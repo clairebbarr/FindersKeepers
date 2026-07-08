@@ -21,7 +21,14 @@ export default async function FaqPage() {
 
       <div className="mx-auto mt-14 max-w-2xl space-y-10">
         <div>
-          <h2 className="font-display text-2xl font-semibold text-fk-plum">General</h2>
+          <EditableText
+            page="faq"
+            section="general"
+            field="heading"
+            as="h2"
+            className="font-display text-2xl font-semibold text-fk-plum"
+            initialValue={contentMap["general.heading"] ?? "General"}
+          />
           <div className="mt-4 space-y-6">
             {generalFaq.map((item, i) => (
               <div key={item.question} className="border-b border-fk-ink/10 pb-4">
@@ -47,7 +54,14 @@ export default async function FaqPage() {
         </div>
 
         <div>
-          <h2 className="font-display text-2xl font-semibold text-fk-plum">Subscriptions and Pricing</h2>
+          <EditableText
+            page="faq"
+            section="pricing"
+            field="heading"
+            as="h2"
+            className="font-display text-2xl font-semibold text-fk-plum"
+            initialValue={contentMap["pricing.heading"] ?? "Subscriptions and Pricing"}
+          />
           <div className="mt-4 space-y-6">
             {pricingFaq.map((item, i) => (
               <div key={item.question} className="border-b border-fk-ink/10 pb-4">

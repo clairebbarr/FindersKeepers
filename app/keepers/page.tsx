@@ -20,13 +20,33 @@ export default async function KeepersPage() {
   return (
     <div className="px-5 py-20 sm:px-8">
       <div className="mx-auto max-w-2xl text-center">
-        <p className="font-body text-xs uppercase tracking-[0.35em] text-fk-rust">The three of us</p>
-        <h1 className="mt-3 font-display text-4xl font-semibold uppercase tracking-tight text-fk-plum sm:text-6xl">
-          Meet the Keepers
-        </h1>
-        <p className="mt-5 font-body text-lg text-fk-ink/75">
-          Claire, Leah and Catherine — the three people who do the finding, so you can do the keeping.
-        </p>
+        <EditableText
+          page="keepers"
+          section="intro"
+          field="eyebrow"
+          as="p"
+          className="font-body text-xs uppercase tracking-[0.35em] text-fk-rust"
+          initialValue={contentMap["intro.eyebrow"] ?? "The three of us"}
+        />
+        <EditableText
+          page="keepers"
+          section="intro"
+          field="heading"
+          as="h1"
+          className="mt-3 font-display text-4xl font-semibold uppercase tracking-tight text-fk-plum sm:text-6xl"
+          initialValue={contentMap["intro.heading"] ?? "Meet the Keepers"}
+        />
+        <EditableText
+          page="keepers"
+          section="intro"
+          field="subheading"
+          as="p"
+          className="mt-5 font-body text-lg text-fk-ink/75"
+          initialValue={
+            contentMap["intro.subheading"] ??
+            "Claire, Leah and Catherine — the three people who do the finding, so you can do the keeping."
+          }
+        />
       </div>
 
       <div className="mx-auto mt-14 grid max-w-5xl gap-8 sm:grid-cols-3">
@@ -66,9 +86,14 @@ export default async function KeepersPage() {
         ))}
       </div>
 
-      <p className="mx-auto mt-12 max-w-2xl text-center font-display text-xl italic text-fk-plum">
-        {keepersShared}
-      </p>
+      <EditableText
+        page="keepers"
+        section="intro"
+        field="shared"
+        as="p"
+        className="mx-auto mt-12 block max-w-2xl text-center font-display text-xl italic text-fk-plum"
+        initialValue={contentMap["intro.shared"] ?? keepersShared}
+      />
     </div>
   );
 }

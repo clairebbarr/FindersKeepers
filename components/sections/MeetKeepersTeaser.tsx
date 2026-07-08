@@ -1,6 +1,7 @@
 import { LinkButton } from "@/components/ui/Button";
 import { Star4, Star8 } from "@/components/brand/icons";
 import { EditableImage } from "@/components/admin/EditableImage";
+import { EditableText } from "@/components/admin/EditableText";
 import { ColorEditableSection } from "@/components/admin/ColorEditableSection";
 import { founders } from "@/content/founders";
 
@@ -29,10 +30,22 @@ export function MeetKeepersTeaser({
       <Star8 className="absolute -left-4 top-8 h-16 w-16 text-fk-plum/10" />
       <div className="mx-auto max-w-5xl">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="font-body text-xs uppercase tracking-[0.35em] text-fk-plum/70">The three of us</p>
-          <h2 className="mt-3 font-display text-4xl font-semibold uppercase tracking-tight text-fk-plum sm:text-5xl">
-            Meet the Keepers
-          </h2>
+          <EditableText
+            page="home"
+            section="keepers-teaser"
+            field="eyebrow"
+            as="p"
+            className="font-body text-xs uppercase tracking-[0.35em] text-fk-plum/70"
+            initialValue={contentMap["keepers-teaser.eyebrow"] ?? "The three of us"}
+          />
+          <EditableText
+            page="home"
+            section="keepers-teaser"
+            field="heading"
+            as="h2"
+            className="mt-3 font-display text-4xl font-semibold uppercase tracking-tight text-fk-plum sm:text-5xl"
+            initialValue={contentMap["keepers-teaser.heading"] ?? "Meet the Keepers"}
+          />
         </div>
 
         <div className="mt-12 grid gap-6 sm:grid-cols-3">

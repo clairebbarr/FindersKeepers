@@ -15,7 +15,14 @@ export function PromiseSection({
           <PublisherMark className="h-40 w-40 text-fk-plum sm:h-48 sm:w-48" />
         </div>
         <div className="text-center sm:text-left">
-          <p className="font-body text-xs uppercase tracking-[0.3em] text-fk-rust">Our publisher&apos;s mark</p>
+          <EditableText
+            page="home"
+            section="promise"
+            field="eyebrow"
+            as="p"
+            className="font-body text-xs uppercase tracking-[0.3em] text-fk-rust"
+            initialValue={contentMap["promise.eyebrow"] ?? "Our publisher's mark"}
+          />
           <h2 className="mt-3 flex flex-wrap items-center justify-center gap-3 font-display text-4xl font-semibold uppercase tracking-tight text-fk-plum sm:justify-start sm:text-5xl">
             <EditableText
               page="home"

@@ -53,8 +53,15 @@ export function Hero({
           <Wordmark stacked className="mt-4 text-[3.5rem] leading-[0.82] text-fk-mint sm:text-8xl" />
 
           <ul className="mt-8 space-y-1 font-body text-sm uppercase tracking-[0.12em] text-fk-mint/85 sm:text-base">
-            {home.heroList.map((line) => (
-              <li key={line}>{line}</li>
+            {home.heroList.map((line, i) => (
+              <EditableText
+                key={i}
+                page="home"
+                section="hero"
+                field={`list-${i}`}
+                as="li"
+                initialValue={contentMap[`hero.list-${i}`] ?? line}
+              />
             ))}
           </ul>
 
@@ -74,9 +81,14 @@ export function Hero({
 
         {/* Right: collector's specimen case of brand motifs */}
         <div className="relative mx-auto w-full max-w-xs">
-          <p className="mb-3 text-center font-body text-[0.65rem] uppercase tracking-[0.3em] text-fk-mint/70">
-            A collection of small things
-          </p>
+          <EditableText
+            page="home"
+            section="hero"
+            field="specimen-label"
+            as="p"
+            className="mb-3 block text-center font-body text-[0.65rem] uppercase tracking-[0.3em] text-fk-mint/70"
+            initialValue={contentMap["hero.specimen-label"] ?? "A collection of small things"}
+          />
           <div
             data-fk-edit="home:hero:specimen-grid"
             className="grid grid-cols-3 overflow-hidden rounded-sm border-2 border-fk-mint/60"
@@ -109,10 +121,14 @@ export function Hero({
 
       {/* bottom ribbon, like the reference footer strip */}
       <div className="overflow-hidden border-t border-fk-mint/20 bg-fk-plum-dark py-3">
-        <p className="text-center font-body text-[0.6rem] uppercase tracking-[0.2em] text-fk-mint/70 sm:text-xs sm:tracking-[0.3em]">
-          Notice <span className="text-fk-rust">✶</span> Collect{" "}
-          <span className="text-fk-rust">✶</span> Create <span className="text-fk-rust">✶</span> Share
-        </p>
+        <EditableText
+          page="home"
+          section="hero"
+          field="ribbon"
+          as="p"
+          className="text-center font-body text-[0.6rem] uppercase tracking-[0.2em] text-fk-mint/70 sm:text-xs sm:tracking-[0.3em]"
+          initialValue={contentMap["hero.ribbon"] ?? "Notice ✶ Collect ✶ Create ✶ Share"}
+        />
       </div>
     </ColorEditableSection>
   );
