@@ -42,8 +42,10 @@ export function ColorEditableSection({
 
   const style = blockOverrideHex ? { backgroundColor: blockOverrideHex } : undefined;
 
+  const editKey = `${page}:${section}:block`;
+
   if (!isAdmin || !editMode) {
-    return createElement(as, { className, style }, children);
+    return createElement(as, { className, style, "data-fk-edit": editKey }, children);
   }
 
   function applyBlock() {
@@ -68,7 +70,7 @@ export function ColorEditableSection({
 
   return createElement(
     as,
-    { className: `relative ${className}`, style },
+    { className: `relative ${className}`, style, "data-fk-edit": editKey },
     <>
       {children}
       <button

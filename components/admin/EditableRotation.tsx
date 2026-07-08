@@ -17,6 +17,7 @@ export function EditableRotation({
   initialDeg,
   children,
   className = "",
+  editKey,
 }: {
   page: string;
   section: string;
@@ -24,6 +25,8 @@ export function EditableRotation({
   initialDeg: number;
   children: ReactNode;
   className?: string;
+  /** Optional data-fk-edit tag so this card is stylable in colour mode. */
+  editKey?: string;
 }) {
   const { isAdmin, editMode } = useEditMode();
   const [deg, setDeg] = useState(initialDeg);
@@ -48,7 +51,11 @@ export function EditableRotation({
   }
 
   return (
-    <div className={`relative ${className}`} style={{ transform: `rotate(${deg}deg)` }}>
+    <div
+      className={`relative ${className}`}
+      style={{ transform: `rotate(${deg}deg)` }}
+      data-fk-edit={editKey}
+    >
       {children}
       {isAdmin && editMode ? (
         <div className="absolute -bottom-3 left-1/2 z-30 flex -translate-x-1/2 items-center gap-1 rounded-full border-2 border-fk-plum bg-fk-cream px-1.5 py-0.5 shadow-[2px_2px_0_0_var(--color-fk-plum)]">

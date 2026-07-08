@@ -59,7 +59,7 @@ export function ElementStyleEditor() {
 
   if (!styleMode || !target) return null;
 
-  function save(prop: "color" | "backgroundColor", value: string) {
+  function save(prop: string, value: string) {
     if (!target) return;
     startTransition(async () => {
       await updateElementStyle(target.key, prop, value);
@@ -67,14 +67,30 @@ export function ElementStyleEditor() {
     });
   }
 
+  function saveBorderWidth(value: string) {
+    if (!value) return;
+    save("borderWidth", value);
+    // A width is invisible without a style, so pair them automatically.
+    save("borderStyle", value === "0px" ? "none" : "solid");
+  }
+
+  const WIDTHS: [string, string][] = [["0px", "none"], ["1px", "thin"], ["2px", "medium"], ["4px", "thick"]];
+  const RADII: [string, string][] = [["0px", "square"], ["8px", "soft"], ["24px", "round"], ["9999px", "pill"]];
+  const SHADOWS: [string, string][] = [
+    ["none", "none"],
+    ["3px 3px 0 0 var(--color-fk-plum)", "soft"],
+    ["5px 5px 0 0 var(--color-fk-plum)", "bold"],
+    ["0 8px 24px rgba(0,0,0,0.18)", "float"],
+  ];
+
   return (
     <div
-      className="fixed z-50 w-56 rounded-2xl border-2 border-fk-plum bg-fk-cream p-4 text-left shadow-[3px_3px_0_0_var(--color-fk-plum)]"
-      style={{ left: target.x, top: Math.min(target.y, window.innerHeight - 220) }}
+      className="fixed z-50 max-h-[80vh] w-60 overflow-auto rounded-2xl border-2 border-fk-plum bg-fk-cream p-4 text-left shadow-[3px_3px_0_0_var(--color-fk-plum)]"
+      style={{ left: target.x, top: Math.min(target.y, Math.max(16, window.innerHeight - 440)) }}
       onClick={(e) => e.stopPropagation()}
     >
       <div className="flex items-center justify-between">
-        <p className="font-body text-xs uppercase tracking-wide text-fk-ink/60">Colour this element</p>
+        <p className="font-body text-xs uppercase tracking-wide text-fk-ink/60">Style this element</p>
         <button
           type="button"
           onClick={() => setTarget(null)}
@@ -85,41 +101,87 @@ export function ElementStyleEditor() {
         </button>
       </div>
 
-      <label className="mt-3 block font-body text-xs text-fk-ink/70">Text colour</label>
-      <div className="mt-1 flex items-center gap-2">
-        <input
-          type="color"
-          defaultValue={target.color}
-          disabled={isPending}
-          onChange={(e) => save("color", e.target.value)}
-          className="h-9 w-full cursor-pointer rounded border border-fk-ink/20"
-        />
-        <button
-          type="button"
-          onClick={() => save("color", "")}
-          className="shrink-0 font-body text-[11px] text-fk-rust underline"
-        >
-          reset
-        </button>
-      </div>
+      {(
+        [
+          ["color", "Text colour", target.color],
+          ["backgroundColor", "Background", target.background],
+          ["borderColor", "Border colour", "#4a214b"],
+        ] as const
+      ).map(([prop, label, initial]) => (
+        <div key={prop}>
+          <label className="mt-3 block font-body text-xs text-fk-ink/70">{label}</label>
+          <div className="mt-1 flex items-center gap-2">
+            <input
+              type="color"
+              defaultValue={initial}
+              disabled={isPending}
+              onChange={(e) => save(prop, e.target.value)}
+              className="h-9 w-full cursor-pointer rounded border border-fk-ink/20"
+            />
+            <button
+              type="button"
+              onClick={() => save(prop, "")}
+              className="shrink-0 font-body text-[11px] text-fk-rust underline"
+            >
+              reset
+            </button>
+          </div>
+        </div>
+      ))}
 
-      <label className="mt-3 block font-body text-xs text-fk-ink/70">Background colour</label>
-      <div className="mt-1 flex items-center gap-2">
-        <input
-          type="color"
-          defaultValue={target.background}
-          disabled={isPending}
-          onChange={(e) => save("backgroundColor", e.target.value)}
-          className="h-9 w-full cursor-pointer rounded border border-fk-ink/20"
-        />
-        <button
-          type="button"
-          onClick={() => save("backgroundColor", "")}
-          className="shrink-0 font-body text-[11px] text-fk-rust underline"
-        >
-          reset
-        </button>
-      </div>
+      <label className="mt-3 block font-body text-xs text-fk-ink/70">Border thickness</label>
+      <select
+        disabled={isPending}
+        defaultValue=""
+        onChange={(e) => (e.target.value === "reset" ? (save("borderWidth", ""), save("borderStyle", "")) : saveBorderWidth(e.target.value))}
+        className="mt-1 w-full rounded border border-fk-ink/20 bg-white px-2 py-1.5 font-body text-sm"
+      >
+        <option value="" disabled>
+          choose…
+        </option>
+        {WIDTHS.map(([v, label]) => (
+          <option key={v} value={v}>
+            {label}
+          </option>
+        ))}
+        <option value="reset">reset</option>
+      </select>
+
+      <label className="mt-3 block font-body text-xs text-fk-ink/70">Corner radius</label>
+      <select
+        disabled={isPending}
+        defaultValue=""
+        onChange={(e) => save("borderRadius", e.target.value === "reset" ? "" : e.target.value)}
+        className="mt-1 w-full rounded border border-fk-ink/20 bg-white px-2 py-1.5 font-body text-sm"
+      >
+        <option value="" disabled>
+          choose…
+        </option>
+        {RADII.map(([v, label]) => (
+          <option key={v} value={v}>
+            {label}
+          </option>
+        ))}
+        <option value="reset">reset</option>
+      </select>
+
+      <label className="mt-3 block font-body text-xs text-fk-ink/70">Shadow</label>
+      <select
+        disabled={isPending}
+        defaultValue=""
+        onChange={(e) => save("boxShadow", e.target.value === "reset" ? "" : e.target.value)}
+        className="mt-1 w-full rounded border border-fk-ink/20 bg-white px-2 py-1.5 font-body text-sm"
+      >
+        <option value="" disabled>
+          choose…
+        </option>
+        {SHADOWS.map(([v, label]) => (
+          <option key={v} value={v}>
+            {label}
+          </option>
+        ))}
+        <option value="reset">reset</option>
+      </select>
     </div>
   );
 }

@@ -8,6 +8,7 @@ import { ElementStyleEditor } from "@/components/admin/ElementStyleEditor";
 import { getCurrentProfile, isAdminRole } from "@/lib/auth/current-profile";
 import { getColorOverrides, getElementStyleOverrides } from "@/lib/site-content/get";
 import { BRAND_COLOR_TOKENS } from "@/lib/site-content/color-tokens";
+import { STYLE_PROPS, isValidStyleValue } from "@/lib/site-content/style-props";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -34,7 +35,6 @@ export const metadata: Metadata = {
 const HEX_RE = /^#[0-9a-fA-F]{6}$/;
 const KEY_RE = /^[a-zA-Z0-9:_-]+$/;
 const VALID_TOKEN_KEYS: Set<string> = new Set(BRAND_COLOR_TOKENS.map((t) => t.key));
-const STYLE_PROP_CSS: Record<string, string> = { color: "color", backgroundColor: "background-color" };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const [profile, colorOverrides, elementStyles] = await Promise.all([
@@ -50,12 +50,13 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     .map(([key, value]) => `--color-fk-${key}:${value};`)
     .join("");
 
-  // per-element colour overrides -> [data-fk-edit="..."]{ ... !important }
+  // per-element style overrides -> [data-fk-edit="..."]{ ... !important }
   const styleByKey = new Map<string, string[]>();
   for (const { key, prop, value } of elementStyles) {
-    if (!KEY_RE.test(key) || !STYLE_PROP_CSS[prop] || !HEX_RE.test(value)) continue;
+    const def = STYLE_PROPS[prop];
+    if (!KEY_RE.test(key) || !def || !isValidStyleValue(prop, value)) continue;
     const decls = styleByKey.get(key) ?? [];
-    decls.push(`${STYLE_PROP_CSS[prop]}:${value} !important;`);
+    decls.push(`${def.css}:${value} !important;`);
     styleByKey.set(key, decls);
   }
   const elementCss = [...styleByKey.entries()]

@@ -66,6 +66,7 @@ export function WhatArrivesPreview({
               page="home"
               section={`what-arrives-cat-${cat.key}`}
               field="rotation"
+              editKey={`home:what-arrives-cat-${cat.key}:card`}
               initialDeg={Number(
                 contentMap[`what-arrives-cat-${cat.key}.rotation`] ?? defaultTilts[i % defaultTilts.length]
               )}

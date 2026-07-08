@@ -36,6 +36,7 @@ export default async function KeepersPage() {
             page="keepers"
             section={f.slug}
             field="rotation"
+            editKey={`keepers:${f.slug}:card`}
             initialDeg={Number(contentMap[`${f.slug}.rotation`] ?? (i === 1 ? 0 : i === 0 ? -1 : 1))}
             className="border-2 border-fk-plum bg-fk-paper p-8 text-center shadow-[6px_6px_0_0_var(--color-fk-plum)]"
           >

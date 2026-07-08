@@ -19,6 +19,7 @@ export function EditionCard({
   return (
     <Link href={`/editions/${edition.slug}`} className="block">
       <div
+        data-fk-edit={`edition-${edition.slug}:card`}
         className="flex h-full flex-col border p-5 transition-transform duration-150 hover:-translate-y-0.5"
         style={{ borderColor: palette.colors.primary, backgroundColor: palette.colors.paper }}
       >

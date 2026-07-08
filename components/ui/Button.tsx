@@ -19,7 +19,7 @@ export function Button({
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; children: ReactNode }) {
   return (
-    <button className={`${base} ${variants[variant]} ${className}`} {...props}>
+    <button data-fk-edit="ui:button" className={`${base} ${variants[variant]} ${className}`} {...props}>
       {children}
     </button>
   );
@@ -37,7 +37,7 @@ export function LinkButton({
   className?: string;
 }) {
   return (
-    <Link href={href} className={`${base} ${variants[variant]} ${className}`}>
+    <Link href={href} data-fk-edit="ui:button" className={`${base} ${variants[variant]} ${className}`}>
       {children}
     </Link>
   );

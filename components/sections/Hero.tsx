@@ -77,7 +77,10 @@ export function Hero({
           <p className="mb-3 text-center font-body text-[0.65rem] uppercase tracking-[0.3em] text-fk-mint/70">
             A collection of small things
           </p>
-          <div className="grid grid-cols-3 overflow-hidden rounded-sm border-2 border-fk-mint/60">
+          <div
+            data-fk-edit="home:hero:specimen-grid"
+            className="grid grid-cols-3 overflow-hidden rounded-sm border-2 border-fk-mint/60"
+          >
             {specimens.map((defaultKey, i) => (
               <div
                 key={i}
