@@ -5,14 +5,18 @@ export function LegalPage({
   updated,
   children,
 }: {
-  title: string;
+  title: ReactNode;
   updated: string;
   children: ReactNode;
 }) {
   return (
     <div className="px-5 py-20 sm:px-8">
       <div className="mx-auto max-w-2xl">
-        <h1 className="font-display text-4xl font-semibold text-fk-plum">{title}</h1>
+        {typeof title === "string" ? (
+          <h1 className="font-display text-4xl font-semibold text-fk-plum">{title}</h1>
+        ) : (
+          title
+        )}
         <p className="mt-2 font-body text-xs uppercase tracking-[0.15em] text-fk-ink/50">
           Last updated: {updated}
         </p>

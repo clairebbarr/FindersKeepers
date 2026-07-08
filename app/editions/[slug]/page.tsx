@@ -4,9 +4,10 @@ import { Badge } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 import { Star4 } from "@/components/brand/icons";
 import { EditableImage } from "@/components/admin/EditableImage";
+import { EditableText } from "@/components/admin/EditableText";
 import { editions, getEdition } from "@/content/editions";
 import { getPalette } from "@/content/palettes";
-import { getMediaMap } from "@/lib/site-content/get";
+import { getMediaMap, getSiteContentMap } from "@/lib/site-content/get";
 
 export function generateStaticParams() {
   return editions.map((e) => ({ slug: e.slug }));
@@ -36,7 +37,10 @@ export default async function EditionDetailPage({
   if (!edition) notFound();
 
   const palette = getPalette(edition.paletteKey);
-  const mediaMap = await getMediaMap([`edition-${edition.slug}`]);
+  const [mediaMap, c] = await Promise.all([
+    getMediaMap([`edition-${edition.slug}`]),
+    getSiteContentMap(`edition-${edition.slug}`),
+  ]);
 
   return (
     <div className="px-5 py-20 sm:px-8">
@@ -59,18 +63,50 @@ export default async function EditionDetailPage({
         <Badge className="mt-8 w-fit" style={{ borderColor: palette.colors.primary, color: palette.colors.primary }}>
           Edition {edition.number} &middot; {edition.status}
         </Badge>
-        <h1 className="mt-4 font-display text-4xl font-semibold text-fk-plum sm:text-5xl">{edition.name}</h1>
-        <p className="mt-2 font-body text-sm uppercase tracking-[0.2em] text-fk-ink/60">
-          Dispatch window: {edition.dispatchWindow}
-        </p>
-        <p className="mt-6 font-body text-lg text-fk-ink/85">{edition.description}</p>
+        <EditableText
+          page={`edition-${edition.slug}`}
+          section="intro"
+          field="name"
+          as="h1"
+          className="mt-4 font-display text-4xl font-semibold text-fk-plum sm:text-5xl"
+          initialValue={c["intro.name"] ?? edition.name}
+        />
+        <EditableText
+          page={`edition-${edition.slug}`}
+          section="intro"
+          field="dispatch"
+          as="p"
+          className="mt-2 block font-body text-sm uppercase tracking-[0.2em] text-fk-ink/60"
+          initialValue={c["intro.dispatch"] ?? `Dispatch window: ${edition.dispatchWindow}`}
+        />
+        <EditableText
+          page={`edition-${edition.slug}`}
+          section="intro"
+          field="description"
+          as="p"
+          className="mt-6 block font-body text-lg text-fk-ink/85"
+          initialValue={c["intro.description"] ?? edition.description}
+        />
 
-        <h2 className="mt-10 font-display text-xl font-semibold text-fk-plum">What&apos;s inside</h2>
+        <EditableText
+          page={`edition-${edition.slug}`}
+          section="inside"
+          field="heading"
+          as="h2"
+          className="mt-10 block font-display text-xl font-semibold text-fk-plum"
+          initialValue={c["inside.heading"] ?? "What's inside"}
+        />
         <ul className="mt-4 space-y-2">
-          {edition.contents.map((item) => (
-            <li key={item} className="border-b border-fk-ink/10 pb-2 font-body text-fk-ink/80">
-              {item}
-            </li>
+          {edition.contents.map((item, j) => (
+            <EditableText
+              key={j}
+              page={`edition-${edition.slug}`}
+              section="inside"
+              field={`item-${j}`}
+              as="li"
+              className="border-b border-fk-ink/10 pb-2 font-body text-fk-ink/80"
+              initialValue={c[`inside.item-${j}`] ?? item}
+            />
           ))}
         </ul>
 
