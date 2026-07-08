@@ -36,6 +36,29 @@ export async function getMediaMap(keys: string[]): Promise<Record<string, string
   }
 }
 
+/** Page layout config (section order + hidden sections). See layout-actions.ts. */
+export async function getLayoutConfig(pageKey: string): Promise<{ order: string[]; hidden: string[] }> {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return { order: [], hidden: [] };
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("site_content")
+      .select("field, value")
+      .eq("page", "@layout")
+      .eq("section", pageKey);
+    let order: string[] = [];
+    let hidden: string[] = [];
+    (data ?? []).forEach((row) => {
+      if (row.field === "order" && row.value) order = row.value.split(",").filter(Boolean);
+      if (row.field === "hidden" && row.value) hidden = row.value.split(",").filter(Boolean);
+    });
+    return { order, hidden };
+  } catch (err) {
+    rethrowIfDynamicServerUsage(err);
+    return { order: [], hidden: [] };
+  }
+}
+
 /** Per-element style overrides (see element-style-actions.ts). Returned flat so
  *  the layout can inject them as global CSS keyed by each element's
  *  data-fk-edit value. */
